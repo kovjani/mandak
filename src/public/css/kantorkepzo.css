@@ -1,0 +1,41 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    background-image: url("/img/kantorkepzo.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.7), 
+        rgba(0, 0, 0, 0.7)
+      ), url("/img/kantorkepzo.jpg");
+}
+#container{
+    width: 100vw;
+    height: 90vh;
+    margin-top: 10em;
+    padding: 20px;
+    position: relative;
+    opacity: 0;
+    color: white;
+}
+#logo{
+    width: 150px;
+    margin-bottom: 20px;
+}
+nav{
+    top: 0;
+    z-index: 1;
+    background: none !important;
+    position: sticky !important;
+    box-shadow: none;
+}
+nav a, footer a{
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+nav .active{
+    font-weight: bold;
+}
+#nav-logo{
+    display: none;
+}

@@ -1,0 +1,128 @@
+.list-item{
+    box-shadow: 0 0 0.5em #696969;
+    margin: 2em auto;
+    border-radius: 1em;
+    padding-bottom: 0.01em;
+}
+.cover_image{
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 5em;
+    width: 100%;
+    border-top-left-radius: 1em;
+    border-top-right-radius: 1em;
+    cursor: pointer;
+}
+.title{
+    cursor: pointer;
+    font-weight: bold;
+    font-size: larger;
+    width: 100%;
+    padding: 0.5em 0.85em;
+    padding-bottom: 0;
+}
+.title:hover{
+    text-decoration: underline;
+}
+.time{
+    font-size: larger;
+    width: fit-content;
+    color: grey;
+    padding: 0 0.4em;
+}
+.place_date{
+    padding: 0 0.5em;
+    padding-bottom: 1em;
+    cursor: pointer;
+}
+.label{
+    font-weight: bold;
+    font-size: larger;
+    margin-left: 0.8em;
+}
+.img_link{
+    width: 5em;
+    height: auto;
+    float: left;
+    margin-right: 0.7em;
+}
+.image{
+    width: 5em;
+    /* margin-right: 1em; */
+}
+.description{
+    margin: 0 !important;
+    text-align: justify;
+    /* min-height: 10em; */
+}
+.image_and_description{
+    overflow: hidden;
+    margin: 1em;
+    margin-top: 0;
+}
+@media only screen and (max-width: 1000px) {
+    .music_list{
+        padding: 0 !important;
+        margin: auto !important;
+        width: min-content !important;
+    }
+}
+#list{
+    min-height: 100vh;
+    padding: 1em;
+}
+#list-container{
+    max-width: 40em;
+    margin: auto;
+}
+#search{
+    position: relative;
+}
+.display-block{
+    display: block !important;
+}
+audio{
+    /* margin: auto; */
+    margin-bottom: 1em;
+    border-radius: 3em;
+    box-shadow: 0 0 0.1em #696969;
+}
+audio:hover{
+    cursor: pointer;
+}
+.music_list li{
+    list-style-type: none;
+    /*width: min-content; */
+}
+li a:not(nav a){
+    color: black;
+    text-decoration: none;
+}
+li a:hover:not(nav a){
+    text-decoration: underline;
+    cursor: pointer;
+    color: black;
+}
+.details{
+    display: none;
+}
+.image_div{
+    flex: initial !important;
+    width: 5em !important;
+    height: 5em !important;
+    background-repeat: none;
+    background-size: cover;
+    background-position: center;
+    margin: 0.5em;
+}
+.images_container{
+    margin: auto;
+    margin-bottom: 1em;
+    display: block;
+    width: fit-content;
+}
+.images_container  .row{
+    margin-right: auto !important;
+    margin-left: auto !important;
+    width: fit-content !important;
+}

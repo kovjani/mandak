@@ -1,0 +1,23 @@
+<%- include('header') %>
+<%- include('navbar') %>
+<script src="/js/registration.js"></script>
+<link rel="stylesheet" href="/css/registration.css">
+    <div class="d-flex justify-content-center align-items-center" style="height: 90vh;">
+        <form id="registration" action="/auth/registration" method="post" class="d-flex flex-column justify-content-center align-items-center">
+            <img id="logo" src="/img/logo.png" alt="logo">
+            <input id="name" type="text" name="name" placeholder="Teljes Név" required>
+            <input id="username" type="text" name="username" placeholder="Felhasználónév" required>
+            <input id="password" type="password" name="password" placeholder="Jelszó" required>
+            <input id="password-confirm" type="password" name="password_confirm" placeholder="Jelszó megerősítése" required>
+            <select name="voice" id="voice" required>
+              <option value="" disabled selected>Szólam</option>
+              <option value="Szoprán">Szoprán</option>
+              <option value="Alt">Alt</option>
+              <option value="Tenor">Tenor</option>
+              <option value="Basszus">Basszus</option>
+            </select>
+            <input type="submit" value="Regisztráció">
+        </form>
+    </div>
+</body>
+</html>

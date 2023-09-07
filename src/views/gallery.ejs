@@ -1,0 +1,120 @@
+<%- include('header') %>
+<%- include('navbar') %>
+
+<style>
+    #picture{
+        max-height: 80vh;
+        max-width: 100vw;
+        cursor: pointer;
+    }
+    #picture-container{
+        height: 80vh;
+        display: flex;
+        align-items: center;
+    }
+    .navigatebtn{
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 2em;
+    }
+    #buttons-container{
+        bottom: 1em;
+    }
+    body{
+        background-color: black;
+    }
+    .imgbtn{
+        height: 2em;
+        width: 2em;
+        margin-top: 0.5em;
+        cursor: pointer;
+        border-radius: 0.3em;
+    }
+    @media only screen and (max-width: 1000px){
+        .navigatebtn{
+            display: none;
+        }
+        #picture{
+            max-height: 60vh;
+        }
+        #picture-container{
+            height: 60vh;
+        }
+    }
+</style>
+
+<script>
+    //change active nav-item
+    $('.active').removeClass('active');
+    $('#gallery-nav-item').addClass('active');
+
+    let files = "<%= files %>".split(',');
+    let i = 0;
+
+    $(document).ready(() => {
+        if(sessionStorage.getItem("picture") === null)
+            sessionStorage.setItem("picture", 0);
+
+        i = sessionStorage.getItem("picture");
+        SetPicture();
+
+        let backBtn = $('<button class="navigatebtn" onclick="Back()"><</button>');
+        let nextBtn = $('<button class="navigatebtn" onclick="Next()">></button>');
+
+        $("#buttons-container").append(backBtn);
+        
+        for (let j = 0; j < files.length; j++) {
+            let new_image_btn = $("<img>");
+            new_image_btn.attr("src", `/img/gallery/${files[j]}`);
+            new_image_btn.attr("alt", files[j]);
+            new_image_btn.addClass("imgbtn");
+            new_image_btn.click(function(){
+                i = j;
+                sessionStorage.setItem("picture", i);
+                SetPicture();
+            });
+            $("#buttons-container").append(new_image_btn);
+        }
+
+        $("#buttons-container").append(nextBtn);
+
+    });
+
+    function Next(){
+        i++;
+        if(i > files.length - 1) i = 0;
+
+        sessionStorage.setItem("picture", i);
+        SetPicture();
+    }
+
+    function Back(){
+        i--;
+        if(i < 0) i = files.length - 1;                
+        
+        sessionStorage.setItem("picture", i);
+        SetPicture();
+    }
+
+    function SetPicture(){
+        $("#picture").attr("src", `/img/gallery/${files[i]}`);
+        $("#picture").attr("alt", files[i]);
+        $("#picture").click(function(){
+            location.href = `/img/gallery/${files[i]}`;
+        });
+    }
+</script>
+
+<br>
+
+<div id="picture-container">
+    <img id="picture" class="d-block m-auto">
+</div>
+
+<br>
+
+<div id="buttons-container" class="d-flex justify-content-around">
+</div>
+
+<%- include('footer') %>

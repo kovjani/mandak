@@ -1,0 +1,15 @@
+<%- include('header') %>
+<%- include('navbar') %>
+<script src="/js/login.js"></script>
+<link rel="stylesheet" href="/css/login.css">
+    <div class="d-flex justify-content-center align-items-center" style="height: 90vh;">
+        <form action="/auth/login" method="post" class="d-flex flex-column justify-content-center align-items-center">
+            <img id="logo" src="/img/logo.png" alt="logo">
+            <input id="username" type="text" name="username" placeholder="Felhasználónév" required>
+            <input id="password" type="password" name="password" placeholder="Jelszó" required>
+            <input type="submit" value="Bejelentkezés">
+                <a id="registration" href="/registration">Regisztráció</a>
+        </form>
+    </div>
+</body>
+</html>

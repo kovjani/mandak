@@ -1,0 +1,79 @@
+<%- include('header') %>
+<%- include('navbar') %>
+<script src="js/repertoire.js"></script>
+<%if(user_id){%>
+  <script>
+    function ShowMusic(i, music_information, events_to_music_result, repertoire_result, best_music){
+
+      let music_list = $("<ul></ul>");
+      music_list.addClass("music_list");
+      music_information.append(music_list);
+
+      for (let j = 0; j < events_to_music_result.length; j++) {
+
+          let d = new Date(events_to_music_result[j].date);
+          d.setDate(d.getDate() + 1); //For some reason the date is one day less in the respond, while it's correct in the database.
+          let date = d.toISOString().split('T')[0];
+
+          let text = `${events_to_music_result[j].place} (${date})`;
+
+          let li = $('<li></li>');
+          let label = $('<label style="display: flex;"></label>');
+          let input_radio = $(`<input type="radio" name="${repertoire_result[i].id}">`);
+          let player = $(`<audio controls>Your browser does not support the audio element.</audio>`);
+
+          if(best_music.length && best_music[0].event === events_to_music_result[j].event_id)
+              input_radio.prop('checked', true);
+
+          player.attr("src", events_to_music_result[j].audio);
+          player.on('play', () => {
+              $("audio").not(player).each(function(index, audio) {
+                  audio.pause();
+              });
+          });
+
+          input_radio.click(() => {
+            console.log(events_to_music_result[j].event_id);
+            console.log(repertoire_result[i].id);
+
+              $.post("insert_best_music", {event_id: events_to_music_result[j].event_id, music_id: repertoire_result[i].id}, () => {});
+          });
+
+          label.append(input_radio);
+          label.append(`<p style="margin-bottom: 0.3em;">${text}</p>`);
+          li.append(label);
+          li.append(player);
+          music_list.append(li);
+      }
+    }
+  </script>
+<%}else{%>
+  <script>
+    function ShowMusic(i, music_information, events_to_music_result, repertoire_result, best_music){
+      if(!best_music.length) return;
+      for (let j = 0; j < events_to_music_result.length; j++) {
+        if(best_music.length && best_music[0].event === events_to_music_result[j].event_id){
+          let player = $(`<audio controls>Your browser does not support the audio element.</audio>`);
+          player.attr("src", events_to_music_result[j].audio);
+          player.on('play', () => {
+              $("audio").not(player).each(function(index, audio) {
+                  audio.pause();
+              });
+          });
+          music_information.append(player);
+        }
+      }
+    }
+  </script>
+<%}%>
+<link rel="stylesheet" href="/css/repertoire.css">
+  <div id="list-container" class="container margin-top">
+    <div id="search" class="d-flex">
+      <input class="form-control me-2" type="text" placeholder="Keresés" id="search_item">
+      <button id="search-btn" class="fa fa-search"></button>
+    </div>
+    <div id='list'></div>
+    
+  </div>
+
+<%- include('footer') %>

@@ -1,0 +1,124 @@
+html{
+    scroll-padding-top: 5em;
+}
+body{
+    min-height: 100vh;
+}
+nav{
+    top: 0;
+    z-index: 1;
+    background-color: #800020;
+    position: sticky !important;
+}
+nav a, footer a{
+    color: rgb(255,255,255) !important;
+}
+nav .active{
+    font-weight: bold;
+}
+#nav-logo{
+    height: 2em;
+    filter: drop-shadow(0 0 0.1em #333);
+    cursor: pointer;
+}
+.dark_logo{
+    filter: drop-shadow(0 0 0.2em  #b6e619) !important;
+}
+.dark-facebook{
+    filter: drop-shadow(0 0 0.3em  #6477b4) !important;
+}
+.dark-youtube{
+    filter: drop-shadow(0 0 0.3em  #ff4d4d) !important;
+}
+.navbar-nav{
+    margin-right: 4em;
+}
+.header-image{
+    position: relative;
+    cursor: pointer;
+    width: 100vw;
+}
+#search-btn{
+    background: none;
+    border: none;
+}
+footer, nav{
+    box-shadow: 0 0 0.5em #333;
+}
+footer{
+    margin-top: 50px;
+    background-color: #800020;
+    height: fit-content;
+    color: white;
+}
+#logo{
+    width: 150px;
+    margin-bottom: 20px;
+}
+.footer-content-container{
+    height: 100px !important;
+    margin: 25px 0 !important;
+}
+#facebook-footer-icon, #youtube-footer-icon{
+    height: 30px; filter: drop-shadow(0 0 0.2em #333);
+}
+#home-gallery{
+    margin: 100px auto;
+}
+#home-gallery img{
+    max-height: 15em;
+    width: auto;
+    border-radius: 10px;
+    box-shadow: 0 0 0.5em #000;
+}
+#home-gallery a{
+    margin: 20px;
+}
+#map iframe, #video iframe{
+    width: 100%;
+    display: block;
+    margin: auto;
+    margin-bottom: 5em;
+    border-radius: 10px;
+    box-shadow: 0 0 0.5em #000;
+}
+.margin-top{
+    margin-top: 6em !important;
+}
+.dark_mode{
+    background-color: #000 !important;
+}
+.loader {
+    border: 0.3em solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 0.3em solid #90b615;
+    width: 2em;
+    height: 2em;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+    display: block;
+    margin-top: 1em;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+@media only screen and (max-width: 1000px) {
+    #home-gallery img{
+        display: block;
+        margin: auto;
+        width: 100% !important;
+        max-height: unset !important;
+        height: auto;
+    }
+}
