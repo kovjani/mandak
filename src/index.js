@@ -15,9 +15,9 @@ const certificate = fs.readFileSync('/etc/letsencrypt/live/mandak.ddns.net/cert.
 const ca = fs.readFileSync('/etc/letsencrypt/live/mandak.ddns.net/chain.pem', 'utf8');
 
 const credentials = {
-	key: privateKey,
-	cert: certificate,
-	ca: ca
+    key: privateKey,
+    cert: certificate,
+    ca: ca
 };
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -36,9 +36,12 @@ app.use(session({
 
 app.use(function(req, res, next) {
     res.locals.user_id = req.session.user_id;
+    res.locals.admin = req.session.admin;
     next();
 });
 
+//authenticate google using a web browser
+//require('./routes/google')();
 
 require('./routes/routes')(app, path, fs);
 require('./routes/data')(app, mysql, fs, path, process);

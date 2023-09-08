@@ -19,10 +19,14 @@ module.exports = function (app, mysql, fs, path, process) {
     
     // Set up Google Drive API
     const drive = google.drive({ version: 'v3', auth: oAuth2Client });
-    
 
 
     app.post('/repertoire', function(request, response) {
+
+        if(request.body.search_item === undefined){
+            response.end();
+            return;
+        }
 
         let author, title, query;
 
@@ -63,6 +67,11 @@ module.exports = function (app, mysql, fs, path, process) {
     });
 
     app.post('/events', function(request, response) {
+
+        if(request.body.search_item === undefined){
+            response.end();
+            return;
+        }
 
         let author, title;
 
@@ -122,6 +131,11 @@ module.exports = function (app, mysql, fs, path, process) {
 
     app.post('/events_to_music', function(request, response){
 
+        if(request.body.music_id === undefined){
+            response.end();
+            return;
+        }
+
         var db = mysql.createConnection({
             host: '127.0.0.1',
             user: 'everybody',
@@ -143,6 +157,11 @@ module.exports = function (app, mysql, fs, path, process) {
     });
 
     app.post('/music_to_events', function(request, response){
+
+        if(request.body.event === undefined){
+            response.end();
+            return;
+        }
 
         var db = mysql.createConnection({
             host: '127.0.0.1',
@@ -167,6 +186,11 @@ module.exports = function (app, mysql, fs, path, process) {
     //get the best track from the music which has been recorded during an event
     app.post('/get_best_music', (request, response) => {
 
+        if(request.body.music === undefined){
+            response.end();
+            return;
+        }
+
         var db = mysql.createConnection({
             host: '127.0.0.1',
             user: 'everybody',
@@ -186,6 +210,11 @@ module.exports = function (app, mysql, fs, path, process) {
     });
 
     app.post('/get_images', (request, response) => {
+
+        if(request.body.event_id === undefined){
+            response.end();
+            return;
+        }
 
         var db = mysql.createConnection({
             host: '127.0.0.1',
@@ -207,7 +236,7 @@ module.exports = function (app, mysql, fs, path, process) {
 
     app.post('/insert_best_music', (request, response) => {
 
-        if(!request.session.user_id){
+        if(!request.session.admin || request.body.event_id === undefined || request.body.music_id === undefined){
             response.end();
             return;
         }
@@ -235,7 +264,7 @@ module.exports = function (app, mysql, fs, path, process) {
 
     app.post('/insert_best_image', (request, response) => {
 
-        if(!request.session.user_id){
+        if(!request.session.admin || request.body.event_id === undefined || request.body.cover_image === undefined){
             response.end();
             return;
         }
@@ -264,7 +293,7 @@ module.exports = function (app, mysql, fs, path, process) {
 
     app.post('/synchronize_google_drive', async function(request, response){
 
-        if(!request.session.user_id){
+        if(!request.session.admin){
             response.end();
             return;
         }

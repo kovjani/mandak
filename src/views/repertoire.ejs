@@ -1,7 +1,7 @@
 <%- include('header') %>
 <%- include('navbar') %>
 <script src="js/repertoire.js"></script>
-<%if(user_id){%>
+<%if(admin){%>
   <script>
     function ShowMusic(i, music_information, events_to_music_result, repertoire_result, best_music){
 
@@ -27,16 +27,13 @@
 
           player.attr("src", events_to_music_result[j].audio);
           player.on('play', () => {
-              $("audio").not(player).each(function(index, audio) {
-                  audio.pause();
-              });
+            $("audio").not(player).each(function(index, audio) {
+                audio.pause();
+            });
           });
 
           input_radio.click(() => {
-            console.log(events_to_music_result[j].event_id);
-            console.log(repertoire_result[i].id);
-
-              $.post("insert_best_music", {event_id: events_to_music_result[j].event_id, music_id: repertoire_result[i].id}, () => {});
+            $.post("insert_best_music", {event_id: events_to_music_result[j].event_id, music_id: repertoire_result[i].id}, () => {});
           });
 
           label.append(input_radio);

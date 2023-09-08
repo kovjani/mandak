@@ -1,5 +1,3 @@
-//const res = require("express/lib/response");
-
 //change active navbar item
 $(document).ready(function(){
     $('.active').removeClass('active');
@@ -64,18 +62,18 @@ function ShowContent(events_result, i){
     cover_image.addClass("cover_image");
     new_list_item.append(cover_image);
 
-    let img_link = $("<a></a>");
-    let img = $("<img>");
+    //let img_link = $("<a></a>");
+    //let img = $("<img>");
 
     if(events_result[i].cover_image !== null){
         cover_image.css("background-image", `url(\"${events_result[i].cover_image}\"`);
-        img_link.attr("href", events_result[i].cover_image);
-        img.attr("src", events_result[i].cover_image);
+        //img_link.attr("href", events_result[i].cover_image);
+        //img.attr("src", events_result[i].cover_image);
     }else
     {
         cover_image.css("background-image", `url(\"/img/default_cover.jpg\")`);
-        img_link.attr("href", `/img/default_cover.jpg`);
-        img.attr("src", `/img/default_cover.jpg`);
+        //img_link.attr("href", `/img/default_cover.jpg`);
+        //img.attr("src", `/img/default_cover.jpg`);
     }
 
     let event = $("<div></div>").text(events_result[i].event);
@@ -111,11 +109,11 @@ function ShowContent(events_result, i){
     description.addClass("description");
     image_and_description.append(description);
     
-    img_link.addClass('img_link');
-    image_and_description.prepend(img_link);
+    //img_link.addClass('img_link');
+    //image_and_description.prepend(img_link);
 
-    img.addClass("image");
-    img_link.append(img);
+    //img.addClass("image");
+    //img_link.append(img);
 
     details.append(image_and_description);
     
@@ -134,23 +132,7 @@ function ShowContent(events_result, i){
                     images_container.addClass("container");
                     details.append(images_container);
 
-                    for (let j = 0; j < images_to_events_result.length; j++) {
-
-                        let row = $(`<div></div>`);
-                        row.addClass("row");
-
-                        for (let k = 0; k < 5 && j < images_to_events_result.length; k++, j++) {
-                            let image_div = $(`<div></div>`);
-
-                            image_div.addClass("col");
-                            image_div.addClass("image_div");
-                            image_div.css("background-image", `url("${images_to_events_result[j].image}")`);
-
-                            row.append(image_div);
-                        }
-                    
-                        images_container.append(row);
-                    }
+                    ShowImages(images_container, images_to_events_result, events_result, i);
                 }
             });
 

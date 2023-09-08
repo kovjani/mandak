@@ -33,13 +33,13 @@
           <li id="logout-nav-item" class="nav-item"> 
             <a class="nav-link" href="/logout">Kijelentkezés</a>
           </li>
-
-          <li class="nav-item">
-            <form action="synchronize_google_drive" method="post">
-              <input type="submit" value="Google Drive">
-            </form>
-          </li>
-        
+          <%if(admin){%>
+            <li class="nav-item">
+              <form action="synchronize_google_drive" method="post">
+                <input type="submit" value="Google Drive">
+              </form>
+            </li>
+          <% } %>
         <%} else {%>
 
           <li id="login-nav-item" class="nav-item"> 

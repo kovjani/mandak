@@ -25,6 +25,7 @@ module.exports = function (app, mysql, bcrypt) {
                             {
                                 if(data[count-1].approved === 1){
                                     request.session.user_id = data[count-1].id;
+                                    request.session.admin = data[count-1].admin;
                                     response.redirect("/");
                                 }
                                 else{
