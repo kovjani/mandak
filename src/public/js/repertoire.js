@@ -40,7 +40,13 @@ function Search(item){
         else {
             for (let i = 0; i < repertoire_result.length; i++) {
 
-                let title = $("<p></p>").text(repertoire_result[i].author + ": " + repertoire_result[i].title);
+                let title;
+                if(repertoire_result[i].author != ""){
+                    title = $("<p></p>").text(repertoire_result[i].author + ": " + repertoire_result[i].title);
+                }
+                else{
+                    title = $("<p></p>").text(repertoire_result[i].title);
+                }
                 let player = $(` <audio controls id="music_player">
                     Your browser does not support the audio element.
                     </audio> `);

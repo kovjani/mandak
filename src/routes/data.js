@@ -1,9 +1,8 @@
 const { auth } = require('googleapis/build/src/apis/abusiveexperiencereport');
 
-module.exports = function (app, mysql, fs, path, process) {
+module.exports = function (app, mysql, fs) {
 
     var renderMW = require('../middlewares/generic/renderMW');
-
 
     // Google drive
 
@@ -313,29 +312,58 @@ module.exports = function (app, mysql, fs, path, process) {
             await DBQuery(db, "DELETE FROM music_to_events", []);
             await DBQuery(db, "DELETE FROM images_to_events", []);
 
-            let error_message = [];
             for (let i = 0; i < events.length; i++) {
                 if(events[i].folder !== null && events[i].folder !== undefined){
             
                     let folderId = events[i].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
 
-                    //audio
+                    //audio var
 
+                    //console.log(events[i].folder);
                     let audio_folder = await ListDriveFolderContent(folderId, 'audio');
-                    let track_list = await ListDriveFolderContent(audio_folder[0].id, '');
+                    let track_list;
+                    try{
+                        track_list = await ListDriveFolderContent(audio_folder[0].id, '');
+                    }catch(e){
+                        console.log(events[i].id);
+                        continue;
+                    }
                     let author, title;
 
+                    //images var
+
+                    let images_folder = await ListDriveFolderContent(folderId, 'images');
+                    let image_list;
+                    try{
+                        image_list = await ListDriveFolderContent(images_folder[0].id, '');
+                    }catch(e){
+                        continue;
+                    }
+
+                    //audio db
+
                     for(let j=0; j<track_list.length; j++){
-                        try{
+                        //if there is no _
+                        if(track_list[j].name.includes('_')){
                             let author_title = track_list[j].name.split('_');
+
                             author = author_title[0];
-                            title = author_title[1].replace(".mp3", "");
-                        }catch(e){
-                            if(e.constructor == TypeError){
-                                error_message.push(` ${track_list[j].name} (${events[i].place})`);
-                                continue;
-                            }
+                            title = author_title[1];
+
+                            author = author.trim();
                         }
+                        else{
+                            author = "";
+                            title = track_list[j].name;
+                        }
+
+                        title = title.replace(".mp3", "");
+                        title = title.replace(".m4a", "");
+                        title = title.replace(".mp4", "");
+                        title = title.replace(".wma", "");
+                        title = title.replace(".wav", "");
+                        title = title.replace(".ogg", "");
+                        title = title.trim();
 
                         await DBQuery(db, 
                             `INSERT INTO repertoire (author, title)
@@ -379,11 +407,7 @@ module.exports = function (app, mysql, fs, path, process) {
                         }).catch((err) => {throw err});
                     }
 
-                    //images
-
-                    let images_folder = await ListDriveFolderContent(folderId, 'images');
-                    let image_list = await ListDriveFolderContent(images_folder[0].id, '');
-
+                    // images db
                     for(let j=0; j<image_list.length; j++){
 
                         await DBQuery(db, 
@@ -401,17 +425,13 @@ module.exports = function (app, mysql, fs, path, process) {
                     }
                 }
             }
-            if(error_message.length)
-                response.send(`<script>alert("Hibás fájlnév (szerző_cím). ${error_message}"); history.back();</script>`);
-            else
-                response.send(`<script>alert("Sikeres szinkronizálás."); history.back();</script>`);
+            response.send(`<script>alert("Sikeres szinkronizálás."); history.back();</script>`);
 
             db.end();
         });
     });
 
     async function ListDriveFolderContent(folderId, fileName){
-
         let drive_response = await drive.files.list({
             q: `'${folderId}' in parents and name contains '${fileName}'`,
             fields: 'nextPageToken, files(id, name)',

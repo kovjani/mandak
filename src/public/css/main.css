@@ -1,8 +1,10 @@
 html{
     scroll-padding-top: 5em;
 }
-body{
+#wrapper{
+    position: relative;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 nav{
     top: 0;
@@ -121,4 +123,24 @@ footer{
         max-height: unset !important;
         height: auto;
     }
+    #header-image-container, .header-image{
+        height: 20vh !important;
+    }
+}
+@media only screen and (max-width: 700px) {
+    #logo{
+        display: none;
+    }
+}
+.header-image{
+    position: absolute;
+    left: 100vw;
+}
+#header-image-container, .header-image{
+    width: 100vw;
+    height: 80vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: pointer;
 }

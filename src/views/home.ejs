@@ -1,5 +1,47 @@
 <%- include('header') %>
-<%- include('header-image')%>
+
+<script>
+    let files = "<%= files %>".split(',');
+
+    $(document).ready(() => {
+
+        $("#header-image-container").css("background-image", `url("/img/gallery/${files[0]}")`);
+        
+        for (let i = 0; i < files.length; i++) {
+                
+            let header_image = $("<div></div>");
+            header_image.addClass("header-image");
+            header_image.css("background-image", `url("/img/gallery/${files[i]}")`);
+            header_image.attr("id", `${i}header-image`)
+
+            $("#header-image-container").append(header_image);
+        }
+
+        $("#header-image-container").click(function(){
+            location.href = `/gallery/`;
+        });
+        setInterval(Next, 5000);
+    });
+    let i = 1;
+    function Next(){
+        $(`.header-image`).css({"z-index": 0});
+        $(`#${i}header-image`).css({"z-index": 1});
+        $(`#${i}header-image`).animate({
+            left: '0px'
+        }, 1000, () => {
+            if(i === 0)
+                $(`#${files.length - 1}header-image`).css("left", "100vw");
+            else
+                $(`#${i-1}header-image`).css("left", "100vw");
+            i++;
+            if(i === files.length) i = 0;
+        });
+    }
+</script>
+<div id="header-image-container">
+
+</div>
+
 <%- include('navbar') %>
 
 <script src="js/home.js"></script>
@@ -16,29 +58,9 @@
     <iframe width="1280" height="720" src="https://www.youtube.com/embed/a6pkWUti66E" title="Mandák Kórus - Karácsonyi üdvözlet" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
-
-
-<!-- <div id="home-gallery" class="container d-lg-flex flex-column justify-content-around">
-    <div class="d-lg-flex justify-content-center">
-        <a href="/img/gallery/1.jpg">
-            <img class="img-fluid" src="/img/gallery/1.jpg">
-        </a>
-        <a href="/img/gallery/2.jpg">
-            <img class="img-fluid" src="/img/gallery/2.jpg">
-        </a>
-        <a href="/img/gallery/3.jpg">
-            <img class="img-fluid" src="/img/gallery/3.jpg">
-        </a>
+<div class="container">
+    <div id="map">
+        <iframe width="1280" height="720" src="https://www.google.com/maps/d/u/1/embed?mid=1AbRvzKRrfg7bgOzvHhPKAq4UaEztEmI&ehbc=2E312F"></iframe>
     </div>
-    <div class="d-lg-flex justify-content-center">
-        <a href="/img/gallery/4.jpg">
-            <img class="img-fluid" src="/img/gallery/4.jpg">
-        </a>
-        <a href="/img/gallery/5.jpg">
-            <img class="img-fluid" src="/img/gallery/5.jpg">
-        </a>
-    </div>
-</div> -->
-
-<%- include('map') %>
+</div>
 <%- include('footer') %>
