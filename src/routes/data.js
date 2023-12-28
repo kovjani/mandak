@@ -44,7 +44,7 @@ module.exports = function (app, mysql, fs) {
             query = `SELECT * FROM repertoire
             WHERE author LIKE ?
             AND title LIKE ?
-            ORDER BY author, title`;
+            ORDER BY surname, author, title`;
         }
         else{
             author = request.body.search_item;
@@ -52,7 +52,7 @@ module.exports = function (app, mysql, fs) {
             query = `SELECT * FROM repertoire
             WHERE author LIKE ?
             OR title LIKE ?
-            ORDER BY author, title`;
+            ORDER BY surname, author, title`;
         }
 
         author = '%' + author + '%';
@@ -208,6 +208,32 @@ module.exports = function (app, mysql, fs) {
         );
     });
 
+    //get the author's surname (for order)
+    app.post('/get_surname', (request, response) => {
+
+        if(request.body.music === undefined){
+            response.end();
+            return;
+        }
+
+        var db = mysql.createConnection({
+            host: '127.0.0.1',
+            user: 'everybody',
+            password: '',
+            database: 'mandak'
+        });
+
+        db.query(`SELECT surname FROM repertoire 
+                    WHERE id = ?`,
+            [parseInt(request.body.music)], 
+            function (err, res, fields){
+                if(err) throw err;
+                response.send(res[0].surname);
+                db.end();
+            }
+        );
+    });
+
     app.post('/get_images', (request, response) => {
 
         if(request.body.event_id === undefined){
@@ -226,6 +252,34 @@ module.exports = function (app, mysql, fs) {
                     WHERE event = ?`,
             [parseInt(request.body.event_id)], 
             function (err, res, fields){
+                if(err) throw err;
+                response.send(res);
+                db.end();
+            }
+        );
+    });
+
+    app.post('/insert_surname', (request, response) => {
+
+        let author = request.body.author;
+        let surname = request.body.surname;
+
+        if(!request.session.admin || author === undefined || surname === undefined){
+            response.end();
+            return;
+        }
+
+        var db = mysql.createConnection({
+            host: '127.0.0.1',
+            user: 'admin',
+            password: '',
+            database: 'mandak'
+        });
+
+        db.query(`UPDATE repertoire
+                SET surname = ?
+                WHERE author = ?`,
+            [surname, author], (err, res) => {
                 if(err) throw err;
                 response.send(res);
                 db.end();

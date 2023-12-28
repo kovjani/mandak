@@ -5,14 +5,59 @@
   <script>
     function ShowMusic(i, music_information, events_to_music_result, repertoire_result, best_music){
 
+      //select surname for order by
+      if(repertoire_result[i].author !== ""){
+        let author_names_list = $("<ul></ul>");
+        author_names_list.addClass("author_names_list");
+
+        music_information.append(author_names_list);
+
+        author_names_list.append('<p class="radio_buttons_title">Rendezés alapja:</p>');
+
+        let splitted_author = repertoire_result[i].author.split(" ");
+
+        for (let j = 0; j < splitted_author.length; j++) {
+
+          $.post("get_surname", {music: repertoire_result[i].id}, (surname) => {
+
+            console.log(surname);
+
+            let li = $('<li></li>');
+            let label = $('<label style="display: flex;"></label>');
+            let input_radio = $(`<input type="radio" name="${repertoire_result[i].author}${repertoire_result[i].id}">`);
+
+            if(surname === splitted_author[j])
+              input_radio.prop('checked', true);
+            
+            input_radio.click(() => {
+              $.post("insert_surname", {author: repertoire_result[i].author, surname: splitted_author[j]});
+            });
+
+            label.append(input_radio);
+            label.append(`<p style="margin-bottom: 0.3em;">${splitted_author[j]}</p>`);
+            li.append(label);
+            author_names_list.append(li);
+
+          });
+        }
+      }
+
+      
+
+      // select best music
+
       let music_list = $("<ul></ul>");
       music_list.addClass("music_list");
+
+      music_list.append('<p class="radio_buttons_title">Legjobb felvétel:</p>');
+
       music_information.append(music_list);
 
       for (let j = 0; j < events_to_music_result.length; j++) {
 
           let d = new Date(events_to_music_result[j].date);
           d.setDate(d.getDate() + 1); //For some reason the date is one day less in the respond, while it's correct in the database.
+                                      // async await ?
           let date = d.toISOString().split('T')[0];
 
           let text = `${events_to_music_result[j].place} (${date})`;
