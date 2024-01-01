@@ -355,8 +355,11 @@ module.exports = function (app, mysql, fs) {
             host: '127.0.0.1',
             user: 'admin',
             password: '',
-            database: 'mandak'
+            database: 'mandak',
+            multipleStatements: true
         });
+
+        let all_music_in_google_drive = new Set();
 
         db.query('SELECT * FROM events', async (err, events) => {
             if(err) throw err;
@@ -367,6 +370,7 @@ module.exports = function (app, mysql, fs) {
             await DBQuery(db, "DELETE FROM images_to_events", []);
 
             for (let i = 0; i < events.length; i++) {
+
                 if(events[i].folder !== null && events[i].folder !== undefined){
             
                     let folderId = events[i].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
@@ -419,6 +423,8 @@ module.exports = function (app, mysql, fs) {
                         title = title.replace(".ogg", "");
                         title = title.trim();
 
+                        all_music_in_google_drive.add(author + title);
+
                         await DBQuery(db, 
                             `INSERT INTO repertoire (author, title)
                             SELECT ?, ?
@@ -430,6 +436,19 @@ module.exports = function (app, mysql, fs) {
                                 AND title LIKE ?
                             )`,
                             [author, title, author, title]
+                        ).catch((err) => {throw err});
+
+                        await DBQuery(db, 
+                            `UPDATE repertoire
+                                SET surname = (
+                                    SELECT surname
+                                        FROM repertoire
+                                        WHERE author LIKE ?
+                                            AND surname NOT LIKE "" AND surname IS NOT NULL
+                                        LIMIT 1
+                                    )
+                                WHERE author LIKE ?;`,
+                            [author, author]
                         ).catch((err) => {throw err});
 
                         await DBQuery(db, 
@@ -479,9 +498,20 @@ module.exports = function (app, mysql, fs) {
                     }
                 }
             }
-            response.send(`<script>alert("Sikeres szinkronizálás."); history.back();</script>`);
 
-            db.end();
+            //If there is a music in database and not in google drive, delete it.
+            db.query(`SELECT id, author, title FROM repertoire`, async (err, all_music_in_database) => {
+                if(err) console.log(err);
+                for (let j = 0; j < all_music_in_database.length; j++) {
+                    let database_value = all_music_in_database[j].author + all_music_in_database[j].title;
+                    if(!all_music_in_google_drive.has(database_value)){
+                        await db.query(`DELETE FROM repertoire WHERE id = ?; 
+                                        ALTER TABLE repertoire AUTO_INCREMENT = 1;`, [all_music_in_database[j].id]);
+                    }
+                }
+                response.send(`<script>alert("Sikeres szinkronizálás."); location.href = "/";</script>`);
+                db.end();
+            });
         });
     });
 

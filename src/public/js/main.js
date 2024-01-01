@@ -1,9 +1,5 @@
 $(document).ready(function(){
     SetStyle();
-    $("#google_drive").click(() => {
-        $("#google_drive").css("display", "none");
-        alert("A szinkronizálás közben, kérlek ne navigálj el az oldalról.");
-    });
 });
 function Dark_mode(){
     if(localStorage.getItem("nav_style") === "dark"){

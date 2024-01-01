@@ -27,19 +27,18 @@
         <!-- <li id="donate-nav-item" class="nav-item"> 
           <a class="nav-link" href="/donate">Támogatás</a>
         </li> -->
+        <%if(admin){%>
+          <li id="google_drive-nav-item" class="nav-item">
+            <a class="nav-link" href="/synchronize_google_drive">Google Drive</a>
+          </li>
+        <% } %>
 
         <%if(user_id){%>
 
           <li id="logout-nav-item" class="nav-item"> 
             <a class="nav-link" href="/logout">Kijelentkezés</a>
           </li>
-          <%if(admin){%>
-            <li class="nav-item">
-              <form id="google_drive" action="synchronize_google_drive" method="post">
-                <input type="submit" value="Google Drive">
-              </form>
-            </li>
-          <% } %>
+          
         <%} else {%>
 
           <li id="login-nav-item" class="nav-item"> 

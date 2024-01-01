@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+  <style>
+    #google_drive{
+      cursor: pointer;
+    }
+    #container{
+      width: fit-content;
+      margin: auto;
+    }
+  </style>
+  <title>Mandák Kórus</title>
+</head>
+<body>
+  <script>
+    $(document).ready(() => {
+      $("#google_drive").click(() => {
+        $("#google_drive").css("display", "none");
+        $("#container").append("<p>Szinkronizálás folyamatban, kérjük ne navigáljon el az oldalról!</p>");
+      });
+    });
+  </script>
+  <div id="container">
+    <form  action="synchronize_google_drive" method="post">
+      <input id="google_drive" type="submit" value="Adatok szinkronizálása">
+    </form>
+  </div>
+</body>
+</html>

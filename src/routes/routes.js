@@ -36,4 +36,13 @@ module.exports = function (app, fs) {
         res.render('gallery', {files: files});
         next();
     });
+    app.get('/synchronize_google_drive', (req, res, next) => {
+        if(req.session.admin){
+            res.render('google_drive');
+        }
+        else{
+            res.redirect("/");
+        }
+        next();
+    });
 };
