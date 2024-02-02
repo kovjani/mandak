@@ -63,9 +63,11 @@
 }
 @media only screen and (max-width: 1000px) {
     .music_list{
-        padding: 0 !important;
-        margin: auto !important;
-        width: min-content !important;
+        min-width: 0 !important;
+        max-width: fit-content;
+    }
+    .music_list li{
+        margin: 1em 0;
     }
 }
 #list{
@@ -125,4 +127,11 @@ li a:hover:not(nav a){
 .images_container .row{
     justify-content: center;
     margin: 0.5em;
+}
+.player_iframe{
+    margin-bottom: 1em;
+}
+.events_track_title:hover{
+    cursor: pointer;
+    text-decoration: underline;
 }

@@ -71,7 +71,7 @@ function ShowContent(events_result, i){
         //img.attr("src", events_result[i].cover_image);
     }else
     {
-        cover_image.css("background-image", `url(\"/img/default_cover.jpg\")`);
+        cover_image.css("background-image", `url(\"/img/covers/default.jpg\")`);
         //img_link.attr("href", `/img/default_cover.jpg`);
         //img.attr("src", `/img/default_cover.jpg`);
     }
@@ -108,7 +108,10 @@ function ShowContent(events_result, i){
     description.html(events_result[i].description.replace('\n', '<br>'));
     description.addClass("description");
     image_and_description.append(description);
-    
+
+    let drive_images = $("<a target='_blank' >Képek</a>");
+    image_and_description.append(drive_images);
+
     //img_link.addClass('img_link');
     //image_and_description.prepend(img_link);
 
@@ -124,7 +127,7 @@ function ShowContent(events_result, i){
         if(!exist){
             exist = true;
             
-            await $.post('get_images', {event_id: events_result[i].id}, function(images_to_events_result){
+            /*await $.post('get_images', {event_id: events_result[i].id}, function(images_to_events_result){
                 if(images_to_events_result.length > 0){
 
                     let images_container = $("<div></div>");
@@ -133,6 +136,13 @@ function ShowContent(events_result, i){
                     details.append(images_container);
 
                     ShowImages(images_container, images_to_events_result, events_result, i);
+                }
+            });*/
+
+
+            await $.post('get_drive_images_folder', {event_id: events_result[i].id}, (images_folder) => {
+                if(images_folder.length > 0){
+                    drive_images.attr("href", `https://drive.google.com/drive/folders/${images_folder[0].id}`);
                 }
             });
 
@@ -148,9 +158,12 @@ function ShowContent(events_result, i){
                     music_list.addClass("music_list");
                     details.append(music_list);
 
+                    //Store the j variable of repertoire_result in order to play next track on ended.
+                    let track_index = 0;
+
                     for (let j = 0; j < music_to_events_result.length; j++) {
                     
-                        let player = $(` <audio controls id="music_player">
+                        /*let player = $(` <audio controls id="music_player">
                             Your browser does not support the audio element.
                             </audio> `);
                         player.each(function(index, audio) {
@@ -161,23 +174,50 @@ function ShowContent(events_result, i){
                                 audio.pause();
                             });
                         });
-                        let text = music_to_events_result[j].author + ": " + music_to_events_result[j].title;
-                        let li = $("<li></li>");
-                        //let a = $(`<a href= '/repertoire?search=${text}' ></a>`);
 
-                        player.attr("src", music_to_events_result[j].audio);
-                            
-                        li.append(`<p style="margin-bottom: 0.3em;">${text}</p>`);
+
+                        player.attr("src", music_to_events_result[j].audio);*/
+                        //let a = $(`<a href= '/repertoire?search=${text}' ></a>`);
+                        
+                        // let player = $(`<iframe
+                        //     class = "player_iframe"
+                        //     frameborder="0"
+                        //     width="500"
+                        //     height="100"
+                        //     src="${music_to_events_result[j].audio}">
+                        //     </iframe>`);
+
+                        let li = $("<li></li>");
+                        let text, track;
+
+                        if(music_to_events_result[j].author.length > 0){
+                            text = music_to_events_result[j].author + ": " + music_to_events_result[j].title;
+                        }
+                        else{
+                            text = music_to_events_result[j].title;
+                        }
+
+
+                        track = $(`<p id="track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
+                        track.addClass("events_track_title");
+
+                        track.click(function () {
+                            track_index = j;    //Important!
+                            PlayTrack(music_to_events_result, track_index, events_result[i].local_folder, i);
+                        });
+
                         //li.append(a);
-                        li.append(player);
+                        //li.append(player);
+                        li.append(track);
                         music_list.append(li);
                     }
+                    $("#audio_player").on('ended', () => {
+                        PlayTrack(music_to_events_result, ++track_index, events_result[i].local_folder, i);
+                    });
                 }
             });
         }
-
         details.slideToggle("slow");
-
     });
 
     cover_image.click(function(){event.click();});
@@ -188,4 +228,24 @@ function ShowContent(events_result, i){
     // i++;
     // if(i < events_result.length)
     //     setTimeout(ShowContent(events_result, i));
+}
+
+function PlayTrack(repertoire_result, track_index, event_folder, event_index){
+    //get the best track from the music which has been recorded during an event
+
+    let track_name;
+    if(repertoire_result[track_index].author.length > 0){
+        track_name = repertoire_result[track_index].author + "_" + repertoire_result[track_index].title + ".mp3";
+    }
+    else{
+        track_name = repertoire_result[track_index].title + ".mp3";
+    }
+
+    $("#audio_player").trigger("pause");
+    $("#audio_player").attr("src", `/events/${event_folder}/audio/${track_name}`);
+    $("#audio_player").trigger("play");
+
+    $(".events_track_title").css("color", "black");
+    $(`#track_${track_index}_${event_index}`).css("color", "#8fb514");
+
 }

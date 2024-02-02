@@ -16,9 +16,15 @@ module.exports = function (app, fs) {
     app.get('/places',
         renderMW(objectRepository, 'places')
     );
-    app.get('/repertoire',
-        renderMW(objectRepository, 'repertoire')
-    );
+    app.get('/repertoire', (req, res, next) => {
+        if(req.session.admin){
+            res.render('repertoire_admin');
+        }
+        else{
+            res.render('repertoire');
+        }
+        next();
+    });
     app.get('/login',
         renderMW(objectRepository, 'login')
     );

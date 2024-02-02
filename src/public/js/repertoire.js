@@ -25,6 +25,9 @@ function Search(item){
 
         let list = $("#list");
 
+        //Store the i variable of repertoire_result in order to play next track on ended.
+        let track_index = 0;
+
         if(repertoire_result.length == 0){
 
             let list_item = $("<div id='no_result_container'></div>");
@@ -42,51 +45,49 @@ function Search(item){
 
                 let title;
                 if(repertoire_result[i].author != ""){
-                    title = $("<p></p>").text(repertoire_result[i].author + ": " + repertoire_result[i].title);
+                    title = $(`<p id='title_${i}'></p>`).text(repertoire_result[i].author + ": " + repertoire_result[i].title);
                 }
                 else{
-                    title = $("<p></p>").text(repertoire_result[i].title);
+                    title = $(`<p id='title_${i}'></p>`).text(repertoire_result[i].title);
                 }
-                let player = $(` <audio controls id="music_player">
-                    Your browser does not support the audio element.
-                    </audio> `);
-                let music_information = $("<div></div>");
-                music_information.addClass("music_information");
                 let list_item = $("<div></div>");
-
-                let exist = false;
 
                 list_item.addClass("list-item");
                 list_item.append(title);
-                list_item.append(music_information);
 
                 list.append(list_item);
             
                 title.addClass("title");
                 title.click(function () {
-                    if(exist){
-                        music_information.slideToggle("slow");
-                        player.each(function(index, audio) {
-                            audio.pause();
-                        });
-                    }
-                    else{
-
-                        exist = true;
-
-                        $.post("events_to_music", {music_id: repertoire_result[i].id}, function(events_to_music_result){
-
-                            if(events_to_music_result.length > 0){
-                                //get the best track from the music which has been recorded during an event
-                                $.post("get_best_music", {music: repertoire_result[i].id}, (best_music) => {
-                                    ShowMusic(i, music_information, events_to_music_result, repertoire_result, best_music);
-                                    music_information.slideToggle("slow");
-                                });
-                            }
-                        });
-                    }
+                    track_index = i;    //Important!
+                    PlayTrack(repertoire_result, track_index);
                 });
             }
+            $("#audio_player").on('ended', () => {
+                PlayTrack(repertoire_result, ++track_index);
+            });
+        }
+    });
+}
+
+function PlayTrack(repertoire_result, track_index){
+    //get the best track from the music which has been recorded during an event
+    $.post("get_best_music", {music: repertoire_result[track_index].id}, (best_music) => {
+        if(best_music.length > 0){
+            let track_name;
+            if(repertoire_result[track_index].author.length > 0){
+                track_name = repertoire_result[track_index].author + "_" + repertoire_result[track_index].title + ".mp3";
+            }
+            else{
+                track_name = repertoire_result[track_index].title + ".mp3";
+            }
+
+            $("#audio_player").trigger("pause");
+            $("#audio_player").attr("src", `/events/${best_music[0].folder}/audio/${track_name}`);
+            $("#audio_player").trigger("play");
+
+            $(".title").css("color", "black");
+            $(`#title_${track_index}`).css("color", "#8fb514");
         }
     });
 }
