@@ -2,9 +2,13 @@
 <%- include('navbar') %>
 
 <link rel="stylesheet" href="/css/repertoire.css">
-<script src="js/repertoire.js"></script>
 
-<%- include('audio_player') %>
+<%if(admin){%>
+  <script src="js/repertoire_admin.js"></script>
+<%}else{%>
+  <script src="js/repertoire.js"></script>
+  <%- include('audio_player') %>
+<%}%>
 
 <div id="list-container" class="container margin-top">
   <div id="search" class="d-flex">

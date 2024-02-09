@@ -21,7 +21,7 @@ $(document).on('keypress', function(e){
 
 function Search(item){
     $("#list").empty();
-    $.post("repertoire", {search_item: item}, function(repertoire_result){
+    $.post("repertoire_data", {search_item: item}, function(repertoire_result){
 
         let list = $("#list");
 
@@ -83,7 +83,7 @@ function PlayTrack(repertoire_result, track_index){
             }
 
             $("#audio_player").trigger("pause");
-            $("#audio_player").attr("src", `/events/${best_music[0].folder}/audio/${track_name}`);
+            $("#audio_player").attr("src", `/events_folder/${best_music[0].folder}/audio/${track_name}`);
             $("#audio_player").trigger("play");
 
             $(".title").css("color", "black");

@@ -20,7 +20,7 @@ module.exports = function (app, mysql, fs) {
     const drive = google.drive({ version: 'v3', auth: oAuth2Client });
 
 
-    app.post('/repertoire', function(request, response) {
+    app.post('/repertoire_data', function(request, response) {
 
         if(request.body.search_item === undefined){
             response.end();
@@ -65,7 +65,7 @@ module.exports = function (app, mysql, fs) {
         });
     });
 
-    app.post('/events', function(request, response) {
+    app.post('/events_data', function(request, response) {
 
         if(request.body.search_item === undefined){
             response.end();
@@ -291,7 +291,36 @@ module.exports = function (app, mysql, fs) {
         );
     });
 
-    app.post('/get_drive_images_folder', (request, response) => {
+    app.post('/insert_best_image', (request, response) => {
+
+        if(!request.session.admin || request.body.event_id === undefined || request.body.cover_image === undefined){
+            response.end();
+            return;
+        }
+
+        var db = mysql.createConnection({
+            host: '127.0.0.1',
+            user: 'admin',
+            password: '',
+            database: 'mandak'
+        });
+
+        let cover_image = request.body.cover_image;
+        let event_id = request.body.event_id;
+
+        db.query(`UPDATE events
+                SET cover_image = ?
+                WHERE id = ?`,
+            [cover_image, parseInt(event_id)], (err, res) => {
+                if(err) throw err;
+                response.send(res);
+                db.end();
+            }
+        );
+
+    });
+
+    app.post('/get_images_drive_folder', (request, response) => {
 
         if(request.body.event_id === undefined){
             response.end();
@@ -307,14 +336,59 @@ module.exports = function (app, mysql, fs) {
 
         let event_id = request.body.event_id;
 
-        db.query(`SELECT folder FROM events WHERE id = ?`,
+        db.query(`SELECT images_drive_folder FROM events WHERE id = ?`,
             [parseInt(event_id)], async (err, res) => {
                 if(err) throw err;
 
-                let folderId = res[0].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
-                let images_folder = await ListDriveFolderContent(folderId, 'images');
+                // let folderId = res[0].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
+                // let images_folder = await ListDriveFolderContent(folderId, 'images');
 
-                response.send(images_folder);
+                response.send(res);
+                db.end();
+            }
+        );
+    });
+
+    app.post('/get_local_images', (request, response) => {
+
+        if(request.body.event_id === undefined){
+            response.end();
+            return;
+        }
+
+        var db = mysql.createConnection({
+            host: '127.0.0.1',
+            user: 'everybody',
+            password: '',
+            database: 'mandak'
+        });
+
+        let event_id = request.body.event_id;
+
+        db.query(`SELECT local_folder FROM events WHERE id = ?`,
+            [parseInt(event_id)], async (err, images_folder) => {
+                if(err) throw err;
+
+                if(images_folder[0].local_folder === null){
+                    response.end();
+                    db.end();
+                    return;
+                }
+
+                // let folderId = res[0].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
+                // let images_folder = await ListDriveFolderContent(folderId, 'images');
+
+                let images = [];
+                let folder = `./public/events_folder/${images_folder[0].local_folder}/images/`;
+
+                await fs.readdirSync(folder).forEach(file => {
+                    images.push({
+                        "image": `/events_folder/${images_folder[0].local_folder}/images/${file}`,
+                        "name": file
+                    });
+                });
+
+                response.send(images);
                 db.end();
             }
         );
@@ -372,7 +446,7 @@ module.exports = function (app, mysql, fs) {
                     let images_folder_url = `https://drive.google.com/drive/folders/${images_folder[0].id}`;
 
                     await DBQuery(db,
-                        `UPDATE events SET images_folder = ? WHERE id = ? AND (images_folder <> ? OR images_folder IS NULL);`,
+                        `UPDATE events SET images_drive_folder = ? WHERE id = ? AND (images_drive_folder <> ? OR images_drive_folder IS NULL);`,
                         [images_folder_url, events[i].id, images_folder_url]
                     ).catch((err) => {throw err});
 
@@ -418,8 +492,7 @@ module.exports = function (app, mysql, fs) {
 
                         all_music_in_google_drive.add(author + title);
 
-                        await DBQuery(db,
-                            `INSERT INTO repertoire (author, title)
+                        await db.query( `INSERT INTO repertoire (author, title)
                             SELECT ?, ?
                             FROM dual
                             WHERE NOT EXISTS (
@@ -427,9 +500,22 @@ module.exports = function (app, mysql, fs) {
                                 FROM repertoire
                                 WHERE author LIKE ?
                                 AND title LIKE ?
-                            )`,
-                            [author, title, author, title]
-                        ).catch((err) => {throw err});
+                            )`, [author, title, author, title], async (err, res) => {
+                                if(err) throw err;
+                                
+                                if(res.insertId){
+                                    //set default best music event to last inserted repertoire music
+                                    await DBQuery(db,
+                                        `UPDATE repertoire
+                                            SET best_music_event = ?
+                                            WHERE id = ?`,
+                                        [events[i].id, res.insertId]
+                                    ).catch((err) => {throw err});
+                                }
+                            }
+                        );
+
+                        //If author's surname has been already selected at least in one record, update in all records.
 
                         await DBQuery(db,
                             `UPDATE repertoire
@@ -555,32 +641,5 @@ module.exports = function (app, mysql, fs) {
         );
     });*/
 
-    /*app.post('/insert_best_image', (request, response) => {
-
-        if(!request.session.admin || request.body.event_id === undefined || request.body.cover_image === undefined){
-            response.end();
-            return;
-        }
-
-        var db = mysql.createConnection({
-            host: '127.0.0.1',
-            user: 'admin',
-            password: '',
-            database: 'mandak'
-        });
-
-        let cover_image = request.body.cover_image;
-        let event_id = request.body.event_id;
-
-        db.query(`UPDATE events
-                SET cover_image = ?
-                WHERE id = ?`,
-            [cover_image, parseInt(event_id)], (err, res) => {
-                if(err) throw err;
-                response.send(res);
-                db.end();
-            }
-        );
-
-    });*/
+    
 };

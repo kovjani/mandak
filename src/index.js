@@ -1,4 +1,5 @@
-const http = require('http');
+//const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const express = require('express');
 const app = express();
@@ -27,6 +28,17 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Let's Encrypt certificate
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/mandak.ddns.net/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/mandak.ddns.net/cert.pem', 'utf8');
+const ca = fs.readFileSync('/etc/letsencrypt/live/mandak.ddns.net/fullchain.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+	ca: ca
+};
+
 //authenticate google using a web browser
 //require('./routes/google')();
 
@@ -39,10 +51,11 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
 const hostname = '127.0.0.1';
-const port = 3000;
  
-const server = http.createServer(app);
- 
-server.listen(port, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+// http.createServer(app).listen(80, () => {
+//   console.log(`Server running at http://${hostname}:80/`);
+// });
+
+https.createServer(credentials, app).listen(443, () => {
+    console.log(`Server running at http://${hostname}:443/`);
+  });
