@@ -1,36 +1,31 @@
-//Middleware declarations (paths) 
-//const Connection = require('mysql/lib/Connection');
-var renderMW = require('../middlewares/generic/renderMW');
-
-
-// ObjectRepositiory declaration
 // Get calls 
 module.exports = function (app, fs) {
-    var objectRepository = {};
     
     app.get('/', function(req, res, next){
         let files = fs.readdirSync('./public/img/gallery/');
         res.render('home', {user_id: req.session.user_id, files: files});
-        next();
+        return next();
     });
-    app.get('/events', (req, res, next) => {
+    app.get('/fellepesek', (req, res, next) => {
         res.render('events');
-        next();
+        return next();
     });
-    app.get('/repertoire', (req, res, next) => {
+    app.get('/repertoar', (req, res, next) => {
         res.render('repertoire');
-        next();
+        return next();
     });
-    app.get('/login',
-        renderMW(objectRepository, 'login')
-    );
-    app.get('/kantorkepzo',
-        renderMW(objectRepository, 'kantorkepzo')
-    );
-    app.get('/gallery', (req, res, next) => {
+    app.get('/login', (req, res, next) => {
+        res.render('login');
+        return next();
+    });
+    app.get('/kantorkepzo', (req, res, next) => {
+        res.render('kantorkepzo');
+        return next();
+    });
+    app.get('/galeria', (req, res, next) => {
         let files = fs.readdirSync('./public/img/gallery/');
         res.render('gallery', {files: files});
-        next();
+        return next();
     });
     app.get('/synchronize_google_drive', (req, res, next) => {
         if(req.session.admin){
@@ -39,6 +34,6 @@ module.exports = function (app, fs) {
         else{
             res.redirect("/");
         }
-        next();
+        return next();
     });
 };

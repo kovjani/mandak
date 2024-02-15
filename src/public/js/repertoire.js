@@ -4,18 +4,20 @@ $(document).ready(function(){
     $('#repertoire-nav-item').addClass('active');
 
     $("#search-btn").click(function(){
-        location.href = `./repertoire?search=${$("#search_item").val()}`;
+        location.href = `./repertoar?search=${$("#search_item").val()}`;
     });
 
     const urlParams = new URLSearchParams(location.search);
     Search(urlParams.get('search'));
+
+    //show searched item in search bar from url params
     $("#search_item").val(urlParams.get('search'));
 });
 
 $(document).on('keypress', function(e){
     //enter
     if(e.which == 13){
-        location.href = `./repertoire?search=${$("#search_item").val()}`;
+        location.href = `./repertoar?search=${$("#search_item").val()}`;
     }
 });
 
@@ -83,7 +85,7 @@ function PlayTrack(repertoire_result, track_index){
             }
 
             $("#audio_player").trigger("pause");
-            $("#audio_player").attr("src", `/events_folder/${best_music[0].folder}/audio/${track_name}`);
+            $("#audio_player").attr("src", `/events/${best_music[0].folder}/audio/${track_name}`);
             $("#audio_player").trigger("play");
 
             $(".title").css("color", "black");

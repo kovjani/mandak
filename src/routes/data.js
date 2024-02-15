@@ -2,8 +2,6 @@ const { auth } = require('googleapis/build/src/apis/abusiveexperiencereport');
 
 module.exports = function (app, mysql, fs) {
 
-    var renderMW = require('../middlewares/generic/renderMW');
-
     // Google drive
 
     const { google } = require('googleapis');
@@ -90,7 +88,7 @@ module.exports = function (app, mysql, fs) {
             title = '%' + title + '%';
             author = '%' + author + '%';
 
-            db.query(`SELECT DISTINCT events.*, FROM events
+            db.query(`SELECT DISTINCT events.* FROM events
                     LEFT OUTER JOIN music_to_events
                     ON  music_to_events.event = events.id
                     LEFT OUTER JOIN repertoire
@@ -379,11 +377,11 @@ module.exports = function (app, mysql, fs) {
                 // let images_folder = await ListDriveFolderContent(folderId, 'images');
 
                 let images = [];
-                let folder = `./public/events_folder/${images_folder[0].local_folder}/images/`;
+                let folder = `./public/events/${images_folder[0].local_folder}/images/`;
 
                 await fs.readdirSync(folder).forEach(file => {
                     images.push({
-                        "image": `/events_folder/${images_folder[0].local_folder}/images/${file}`,
+                        "image": `/events/${images_folder[0].local_folder}/images/${file}`,
                         "name": file
                     });
                 });
@@ -456,6 +454,13 @@ module.exports = function (app, mysql, fs) {
                     await DBQuery(db,
                         `UPDATE events SET local_folder = ? WHERE id = ? AND (local_folder <> ? OR local_folder IS NULL);`,
                         [folder_name, events[i].id, folder_name]
+                    ).catch((err) => {throw err});
+
+                    //set default cover image if null
+                    let cover_image = `/events/${folder_name}/images/1.jpg`;
+                    await DBQuery(db,
+                        `UPDATE events SET cover_image = ? WHERE id = ? AND cover_image IS NULL AND local_folder IS NOT NULL;`,
+                        [cover_image, events[i].id]
                     ).catch((err) => {throw err});
 
                     /*let image_list;

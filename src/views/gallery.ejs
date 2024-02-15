@@ -5,7 +5,7 @@
     #picture{
         max-height: 80vh;
         max-width: 100vw;
-        cursor: pointer;
+        /* cursor: pointer; */
     }
     #picture-container{
         height: 80vh;
@@ -100,9 +100,9 @@
     function SetPicture(){
         $("#picture").attr("src", `/img/gallery/${files[i]}`);
         $("#picture").attr("alt", files[i]);
-        $("#picture").click(function(){
+        /*$("#picture").click(function(){
             location.href = `/img/gallery/${files[i]}`;
-        });
+        });*/
     }
 </script>
 
