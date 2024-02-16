@@ -1,0 +1,95 @@
+<%- include('header') %>
+<%- include('navbar') %>
+<script src="js/places.js"></script>
+<%if(admin){%>
+  <script>
+    function ShowImages(images_container, images_to_events_result, events_result, i){
+        let row = $(`<div></div>`);
+        row.addClass("row");
+      for (let j = -1; j < images_to_events_result.length; j++) {
+
+
+        //for (let k = 0; k < 5 && j < images_to_events_result.length; k++, j++) {
+            let image_div = $(`<div></div>`);
+
+            image_div.addClass("col");
+            image_div.addClass("image_div");
+
+            let input_radio = $(`<input type="radio" name="${events_result[i].id}">`);
+
+            let image_radio_div = $("<div></div>");
+            image_radio_div.css("display", "flex");
+            image_radio_div.css("width", "fit-content");
+
+            image_radio_div.append(input_radio);
+            image_radio_div.append(image_div);
+
+            let cover_image;
+            row.append(image_radio_div);
+
+            if(j == -1){
+              cover_image = '/img/default_cover.jpg';
+              image_div.css("background-image", `url("${cover_image}")`);
+
+              if(events_result[i].cover_image === cover_image)
+                input_radio.prop('checked', true);
+            }
+            else{
+              cover_image = images_to_events_result[j].image;
+              image_div.css("background-image", `url("${cover_image}")`);
+
+              if(events_result[i].cover_image === cover_image)
+                input_radio.prop('checked', true);
+            }
+
+            input_radio.click(() => {
+              $.post("insert_best_image", {event_id: events_result[i].id, cover_image: cover_image}, () => {});
+            });
+
+            image_div.click( () => {
+              location.href = image_div.css("background-image").replace('url("', '').replace('")', '');
+            });
+        //}
+      }
+        images_container.append(row);
+    }
+  </script>
+
+<%}else{%>
+  <script>
+    function ShowImages(images_container, images_to_events_result, events_result, i){
+      let row = $(`<div></div>`);
+      row.addClass("row");
+      for (let j = 0; j < images_to_events_result.length; j++) {
+
+
+        //for (let k = 0; k < 5 && j < images_to_events_result.length; k++, j++) {
+            let image_div = $(`<div></div>`);
+
+            image_div.addClass("col");
+            image_div.addClass("image_div");
+
+            image_div.css("background-image", `url("${images_to_events_result[j].image}")`);
+
+            image_div.click( () => {
+                location.href = image_div.css("background-image").replace('url("', '').replace('")', '');
+            });
+            
+            row.append(image_div);
+        //}
+      }
+        images_container.append(row);
+    }
+  </script>
+  <%}%>
+<link rel="stylesheet" href="/css/places.css">
+  <div id="list-container" class="container margin-top">
+    <div id="search" class="d-flex">
+      <input class="form-control me-2" type="text" placeholder="Keresés" id="search_item">
+      <button id="search-btn" class="fa fa-search" onclick="Search()"></button>
+    </div>
+    <div id="list">
+    </div>  
+  </div>
+
+<%- include('footer') %>
