@@ -1,5 +1,5 @@
-//change active navbar item
 $(document).ready(function(){
+    //change active navbar item
     $('.active').removeClass('active');
     $('#places-nav-item').addClass('active');
 
@@ -62,12 +62,9 @@ function ShowContent(events_result, i){
     cover.addClass("cover");
     new_list_item.append(cover);
 
-    //let img_link = $("<a></a>");
-    //let img = $("<img>");
-
     let title_place_date = $("<div></div>");
 
-    if(events_result[i].cover_image !== null && events_result[i].cover_image !== ""){
+    if(events_result[i].cover_image !== null && events_result[i].cover_image !== "" && events_result[i].cover_image !== "default"){
         cover.css({
             "background-image": `url("${events_result[i].cover_image}")`,
             "height": "15em"
@@ -78,8 +75,6 @@ function ShowContent(events_result, i){
             "border-top-left-radius": "0",
             "border-top-right-radius": "0"
         });
-        //img_link.attr("href", events_result[i].cover_image);
-        //img.attr("src", events_result[i].cover_image);
     }
 
     title_place_date.addClass("title_place_date");
@@ -109,19 +104,6 @@ function ShowContent(events_result, i){
     place_date.append(time);
 
     new_list_item.append(details);
-
-    //let image_and_description = $("<div></div>");
-    //image_and_description.addClass("image_and_description");
-    
-
-    //img_link.addClass('img_link');
-    //image_and_description.prepend(img_link);
-
-    //img.addClass("image");
-    //img_link.append(img);
-
-    //details.append(image_and_description);
-    
 
     let exist = false;
     let details_empty = true;
@@ -162,12 +144,17 @@ function ShowContent(events_result, i){
                     row.addClass("row");
 
                     for (let j = 0; j < images_folder.length; j++) {
+                        let image_link = $(`<a href="/galeria?event=${events_result[i].id}&image=${images_folder[j].image}"></a>`);
                         let image_div = $(`<div></div>`);
             
+                        image_link.addClass("image_link");
+
                         image_div.addClass("col");
                         image_div.addClass("image_div");
             
                         image_div.css("background-image", `url("${images_folder[j].image}")`);
+
+                        image_div.append(image_link);
                         
                         row.append(image_div);
                     }
@@ -178,15 +165,15 @@ function ShowContent(events_result, i){
 
 
             if(!images_empty){
-                //if images folder not empty, append google drive link and images
+                //if images folder is not empty, append google drive link and images
                 await $.post('/get_images_drive_folder', {event_id: events_result[i].id}, (drive_images_folder) => {
                    if(drive_images_folder.length > 0){
                         let drive_images_link_div = $("<div></div>");
                         drive_images_link_div.addClass("margin_top");
 
                         let drive_images = $("<a class='drive_images_link' target='_blank' ><i class='fas'>&#xf302;</i> Képek megtekintése</a>");
-                        drive_images.attr("href", drive_images_folder[0].images_drive_folder);
-                        images_container.attr("href", drive_images_folder[0].images_drive_folder);
+                        //drive_images.attr("href", `/galeria?event=${events_result[i].id}&image=${images_folder[j].image}`);
+                        //images_container.attr("href", drive_images_folder[0].images_drive_folder);
 
                         drive_images_link_div.append(drive_images);
 
@@ -196,8 +183,57 @@ function ShowContent(events_result, i){
                });
             }
 
-            await $.post('/music_to_events', {event: events_result[i].id}, function(music_to_events_result){
-                if(music_to_events_result.length > 0){
+            // await $.post('/music_to_events', {event: events_result[i].id}, function(music_to_events_result){
+            //     if(music_to_events_result.length > 0){
+    
+            //         details_empty = false;
+    
+            //         let label = $(`<h6><i class='fas'>&#xf001;</i> Művek</h6>`);
+                    
+            //         label.addClass("label");
+            //         label.addClass("margin_top");
+            //         details.append(label);
+    
+            //         let music_list = $("<ul></ul>");
+            //         music_list.addClass("music_list");
+            //         details.append(music_list);
+    
+            //         //Store the j variable of repertoire_result in order to play next track on ended.
+            //         let track_index = 0;
+    
+            //         for (let j = 0; j < music_to_events_result.length; j++) {
+                    
+            //             let li = $("<li></li>");
+            //             let text, track;
+    
+            //             if(music_to_events_result[j].author.length > 0){
+            //                 text = music_to_events_result[j].author + ": " + music_to_events_result[j].title;
+            //             }
+            //             else{
+            //                 text = music_to_events_result[j].title;
+            //             }
+    
+            //             track = $(`<p id="track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
+            //             track.addClass("events_track_title");
+    
+            //             track.click(function () {
+            //                 track_index = j;    //Important!
+            //                 PlayTrack(audio_player, music_to_events_result, track_index, events_result[i].local_folder, i);
+            //             });
+    
+            //             li.append(track);
+            //             music_list.append(li);
+            //         }
+            //         audio_player.on('ended', () => {
+            //             PlayTrack(audio_player, music_to_events_result, ++track_index, events_result[i].local_folder, i);
+            //         });
+
+            //         details.append(audio_player);
+            //     }
+            // });
+
+            await $.post('/get_local_audio', {event_id: events_result[i].id}, function(audio_folder){
+                if(audio_folder.length > 0){
     
                     details_empty = false;
     
@@ -214,16 +250,22 @@ function ShowContent(events_result, i){
                     //Store the j variable of repertoire_result in order to play next track on ended.
                     let track_index = 0;
     
-                    for (let j = 0; j < music_to_events_result.length; j++) {
+                    for (let j = 0; j < audio_folder.length; j++) {
                     
                         let li = $("<li></li>");
                         let text, track;
-    
-                        if(music_to_events_result[j].author.length > 0){
-                            text = music_to_events_result[j].author + ": " + music_to_events_result[j].title;
+
+                        let author, title;
+
+                        if(audio_folder[j].name.includes("_")){
+                            let splitted = audio_folder[j].name.split("_");
+                            author = splitted[0];
+                            title = splitted[1];
+
+                            text = author + ": " + title;
                         }
                         else{
-                            text = music_to_events_result[j].title;
+                            text = audio_folder[j].name;
                         }
     
                         track = $(`<p id="track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
@@ -231,14 +273,14 @@ function ShowContent(events_result, i){
     
                         track.click(function () {
                             track_index = j;    //Important!
-                            PlayTrack(audio_player, music_to_events_result, track_index, events_result[i].local_folder, i);
+                            PlayTrack(audio_player, audio_folder, track_index, i);
                         });
     
                         li.append(track);
                         music_list.append(li);
                     }
                     audio_player.on('ended', () => {
-                        PlayTrack(audio_player, music_to_events_result, ++track_index, events_result[i].local_folder, i);
+                        PlayTrack(audio_player, audio_folder, ++track_index, i);
                     });
 
                     details.append(audio_player);
@@ -258,16 +300,8 @@ function ShowContent(events_result, i){
 
 }
 
-function PlayTrack(audio_player, repertoire_result, track_index, event_folder, event_index){
+function PlayTrack(audio_player, audio_folder, track_index, event_index){
     //get the best track from the music which has been recorded during an event
-
-    let track_name;
-    if(repertoire_result[track_index].author.length > 0){
-        track_name = repertoire_result[track_index].author + "_" + repertoire_result[track_index].title + ".mp3";
-    }
-    else{
-        track_name = repertoire_result[track_index].title + ".mp3";
-    }
 
     audio_player.on('play', function() {
         $('audio').not(this).each(function(index, audio) {
@@ -276,10 +310,36 @@ function PlayTrack(audio_player, repertoire_result, track_index, event_folder, e
     });
 
     audio_player.trigger("pause");
-    audio_player.attr("src", `/events/${event_folder}/audio/${track_name}`);
+    audio_player.attr("src", audio_folder[track_index].audio);
     audio_player.trigger("play");
 
     $(".events_track_title").css("color", "black");
     $(`#track_${track_index}_${event_index}`).css("color", "#8fb514");
 
 }
+
+// function PlayTrack(audio_player, repertoire_result, track_index, event_folder, event_index){
+//     //get the best track from the music which has been recorded during an event
+
+//     let track_name;
+//     if(repertoire_result[track_index].author.length > 0){
+//         track_name = repertoire_result[track_index].author + "_" + repertoire_result[track_index].title + ".mp3";
+//     }
+//     else{
+//         track_name = repertoire_result[track_index].title + ".mp3";
+//     }
+
+//     audio_player.on('play', function() {
+//         $('audio').not(this).each(function(index, audio) {
+//             audio.pause();
+//         });
+//     });
+
+//     audio_player.trigger("pause");
+//     audio_player.attr("src", `/events/${event_folder}/audio/${track_name}`);
+//     audio_player.trigger("play");
+
+//     $(".events_track_title").css("color", "black");
+//     $(`#track_${track_index}_${event_index}`).css("color", "#8fb514");
+
+// }

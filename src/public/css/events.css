@@ -59,12 +59,12 @@
     cursor: pointer;
     color: black;
 }
-/* .img_link{
+.image_link{
     width: 5em;
-    height: auto;
+    height: 5em;
     float: left;
     margin-right: 0.7em;
-} */
+}
 .image{
     width: 5em;
     /* margin-right: 1em; */
@@ -134,8 +134,8 @@ li a:hover:not(nav a){
 }
 .image_div{
     flex: initial !important;
-    width: 10em !important;
-    height: 10em !important;
+    width: 5em !important;
+    height: 5em !important;
     background-repeat: none;
     background-size: cover;
     background-position: center;

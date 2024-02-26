@@ -67,7 +67,8 @@ function ShowContent(events_result, i){
 
     let title_place_date = $("<div></div>");
 
-    if(events_result[i].cover_image !== null && events_result[i].cover_image !== ""){
+    //There is a default setting in css for cover and if the database store a cover_image, change some css.
+    if(events_result[i].cover_image !== null && events_result[i].cover_image !== "" && events_result[i].cover_image !== "default"){
         cover.css({
             "background-image": `url("${events_result[i].cover_image}")`,
             "height": "15em"
@@ -173,11 +174,11 @@ function ShowContent(events_result, i){
 
                         image_div.css("background-image", `url("/img/default_cover.jpg")`);
 
-                        if(events_result[i].cover_image === null || events_result[i].cover_image === "")
+                        if(events_result[i].cover_image === null || events_result[i].cover_image === "" || events_result[i].cover_image === "default")
                             input_radio.prop('checked', true);
 
                         input_radio.click(() => {
-                            $.post("/insert_best_image", {event_id: events_result[i].id, cover_image: ""}, () => {});
+                            $.post("/insert_best_image", {event_id: events_result[i].id, cover_image: "default"}, () => {});
                             input_radio.prop('checked', true);
 
                             cover.css({
@@ -193,7 +194,7 @@ function ShowContent(events_result, i){
                         });
 
                         image_div.click(() => {
-                            $.post("/insert_best_image", {event_id: events_result[i].id, cover_image: ""}, () => {});
+                            $.post("/insert_best_image", {event_id: events_result[i].id, cover_image: "default"}, () => {});
                             input_radio.prop('checked', true);
 
                             cover.css({
@@ -271,8 +272,8 @@ function ShowContent(events_result, i){
                });
             }
 
-            await $.post('/music_to_events', {event: events_result[i].id}, function(music_to_events_result){
-                if(music_to_events_result.length > 0){
+            await $.post('/get_local_audio', {event_id: events_result[i].id}, function(audio_folder){
+                if(audio_folder.length > 0){
     
                     details_empty = false;
     
@@ -289,16 +290,22 @@ function ShowContent(events_result, i){
                     //Store the j variable of repertoire_result in order to play next track on ended.
                     let track_index = 0;
     
-                    for (let j = 0; j < music_to_events_result.length; j++) {
+                    for (let j = 0; j < audio_folder.length; j++) {
                     
                         let li = $("<li></li>");
                         let text, track;
-    
-                        if(music_to_events_result[j].author.length > 0){
-                            text = music_to_events_result[j].author + ": " + music_to_events_result[j].title;
+
+                        let author, title;
+
+                        if(audio_folder[j].name.includes("_")){
+                            let splitted = audio_folder[j].name.split("_");
+                            author = splitted[0];
+                            title = splitted[1];
+
+                            text = author + ": " + title;
                         }
                         else{
-                            text = music_to_events_result[j].title;
+                            text = audio_folder[j].name;
                         }
     
                         track = $(`<p id="track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
@@ -306,14 +313,14 @@ function ShowContent(events_result, i){
     
                         track.click(function () {
                             track_index = j;    //Important!
-                            PlayTrack(audio_player, music_to_events_result, track_index, events_result[i].local_folder, i);
+                            PlayTrack(audio_player, audio_folder, track_index, i);
                         });
     
                         li.append(track);
                         music_list.append(li);
                     }
                     audio_player.on('ended', () => {
-                        PlayTrack(audio_player, music_to_events_result, ++track_index, events_result[i].local_folder, i);
+                        PlayTrack(audio_player, audio_folder, ++track_index, i);
                     });
 
                     details.append(audio_player);
@@ -332,17 +339,8 @@ function ShowContent(events_result, i){
     $("#list").append(new_list_item);
 
 }
-
-function PlayTrack(audio_player, repertoire_result, track_index, event_folder, event_index){
+function PlayTrack(audio_player, audio_folder, track_index, event_index){
     //get the best track from the music which has been recorded during an event
-
-    let track_name;
-    if(repertoire_result[track_index].author.length > 0){
-        track_name = repertoire_result[track_index].author + "_" + repertoire_result[track_index].title + ".mp3";
-    }
-    else{
-        track_name = repertoire_result[track_index].title + ".mp3";
-    }
 
     audio_player.on('play', function() {
         $('audio').not(this).each(function(index, audio) {
@@ -351,7 +349,7 @@ function PlayTrack(audio_player, repertoire_result, track_index, event_folder, e
     });
 
     audio_player.trigger("pause");
-    audio_player.attr("src", `/events/${event_folder}/audio/${track_name}`);
+    audio_player.attr("src", audio_folder[track_index].audio);
     audio_player.trigger("play");
 
     $(".events_track_title").css("color", "black");

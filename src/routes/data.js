@@ -347,7 +347,64 @@ module.exports = function (app, mysql, fs) {
         );
     });
 
-    app.post('/get_local_images', (request, response) => {
+    app.post('/get_local_images', async (request, response) => {
+
+        if(request.body.event_id === undefined){
+            response.end();
+            return;
+        }
+
+        var db = mysql.createConnection({
+            host: '127.0.0.1',
+            user: 'everybody',
+            password: '',
+            database: 'mandak'
+        });
+
+        let event_id = request.body.event_id;
+
+        if(event_id == -1){
+            //home gallery
+            let images = [];
+            let folder = `./public/events/gallery/`;
+
+            await fs.readdirSync(folder).forEach(file => {
+                images.push({
+                    "image": `/events/gallery/${file}`,
+                    "name": file
+                });
+            });
+
+            response.send(images);
+        }else{
+            //events gallery
+            db.query(`SELECT local_folder FROM events WHERE id = ?`,
+            [parseInt(event_id)], async (err, events_result) => {
+                if(err) throw err;
+
+                if(events_result[0].local_folder === null || events_result[0].local_folder === ''){
+                    response.end();
+                    db.end();
+                    return;
+                }
+
+                let images = [];
+                let folder = `./public/events/${events_result[0].local_folder}/images/`;
+
+                await fs.readdirSync(folder).forEach(file => {
+                    images.push({
+                        "image": `/events/${events_result[0].local_folder}/images/${file}`,
+                        "name": file
+                    });
+                });
+
+                response.send(images);
+                db.end();
+            });
+        }
+    });
+
+    app.post('/get_local_audio', (request, response) => {
 
         if(request.body.event_id === undefined){
             response.end();
@@ -364,34 +421,31 @@ module.exports = function (app, mysql, fs) {
         let event_id = request.body.event_id;
 
         db.query(`SELECT local_folder FROM events WHERE id = ?`,
-            [parseInt(event_id)], async (err, images_folder) => {
+            [parseInt(event_id)], async (err, events_result) => {
                 if(err) throw err;
 
-                if(images_folder[0].local_folder === null){
+                if(events_result[0].local_folder === null || events_result[0].local_folder === ''){
                     response.end();
                     db.end();
                     return;
                 }
 
-                // let folderId = res[0].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
-                // let images_folder = await ListDriveFolderContent(folderId, 'images');
-
-                let images = [];
-                let folder = `./public/events/${images_folder[0].local_folder}/images/`;
+                let audio = [];
+                let folder = `./public/events/${events_result[0].local_folder}/audio/`;
 
                 await fs.readdirSync(folder).forEach(file => {
-                    images.push({
-                        "image": `/events/${images_folder[0].local_folder}/images/${file}`,
-                        "name": file
+                    audio.push({
+                        "audio": `/events/${events_result[0].local_folder}/audio/${file}`,
+                        "name": file.replace(".mp3", "")
                     });
                 });
 
-                response.send(images);
+                response.send(audio);
                 db.end();
             }
         );
     });
-
+    
     app.post('/synchronize_google_drive', async function(request, response){
 
         if(!request.session.admin){
@@ -415,11 +469,11 @@ module.exports = function (app, mysql, fs) {
             //update repertoire, images, music_to_events and images_to_events tables
 
             await DBQuery(db, "DELETE FROM music_to_events", []);
-            await DBQuery(db, "DELETE FROM images_to_events", []);
+            //await DBQuery(db, "DELETE FROM images_to_events", []);
 
             for (let i = 0; i < events.length; i++) {
 
-                if(events[i].folder !== null && events[i].folder !== undefined){
+                if(events[i].folder !== null && events[i].folder !== "" && events[i].folder !== undefined){
 
                     let folderId = events[i].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
 
@@ -444,7 +498,7 @@ module.exports = function (app, mysql, fs) {
                     let images_folder_url = `https://drive.google.com/drive/folders/${images_folder[0].id}`;
 
                     await DBQuery(db,
-                        `UPDATE events SET images_drive_folder = ? WHERE id = ? AND (images_drive_folder <> ? OR images_drive_folder IS NULL);`,
+                        `UPDATE events SET images_drive_folder = ? WHERE id = ? AND (images_drive_folder <> ? OR images_drive_folder IS NULL OR images_drive_folder = '');`,
                         [images_folder_url, events[i].id, images_folder_url]
                     ).catch((err) => {throw err});
 
@@ -452,14 +506,14 @@ module.exports = function (app, mysql, fs) {
                     let folder_name = await GetDriveFolderName(folderId);
 
                     await DBQuery(db,
-                        `UPDATE events SET local_folder = ? WHERE id = ? AND (local_folder <> ? OR local_folder IS NULL);`,
+                        `UPDATE events SET local_folder = ? WHERE id = ? AND (local_folder <> ? OR local_folder IS NULL OR local_folder = '');`,
                         [folder_name, events[i].id, folder_name]
                     ).catch((err) => {throw err});
 
                     //set default cover image if null
                     let cover_image = `/events/${folder_name}/images/1.jpg`;
                     await DBQuery(db,
-                        `UPDATE events SET cover_image = ? WHERE id = ? AND cover_image IS NULL AND local_folder IS NOT NULL;`,
+                        `UPDATE events SET cover_image = ? WHERE id = ? AND (cover_image IS NULL OR cover_image = '') AND local_folder IS NOT NULL AND local_folder != '';`,
                         [cover_image, events[i].id]
                     ).catch((err) => {throw err});
 

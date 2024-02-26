@@ -49,60 +49,57 @@
     $('.active').removeClass('active');
     $('#gallery-nav-item').addClass('active');
 
-    let files = "<%= files %>".split(',');
+    const urlParams = new URLSearchParams(location.search);
+    let backBtn = $('<button class="navigatebtn" onclick="Back()"><</button>');
+    let nextBtn = $('<button class="navigatebtn" onclick="Next()">></button>');
     let i = 0;
+    let images;
+    let event = parseInt(urlParams.get('event'));
 
-    $(document).ready(() => {
-        if(sessionStorage.getItem("picture") === null)
-            sessionStorage.setItem("picture", 0);
+    $.post("/get_local_images", {event_id: event}, (res) => {
+        images = res;
 
-        i = sessionStorage.getItem("picture");
-        SetPicture();
-
-        let backBtn = $('<button class="navigatebtn" onclick="Back()"><</button>');
-        let nextBtn = $('<button class="navigatebtn" onclick="Next()">></button>');
+        SetPicture(urlParams.get('image'));
 
         $("#buttons-container").append(backBtn);
-        
-        for (let j = 0; j < files.length; j++) {
-            let new_image_btn = $("<img>");
-            new_image_btn.attr("src", `/img/gallery/${files[j]}`);
-            new_image_btn.attr("alt", files[j]);
-            new_image_btn.addClass("imgbtn");
-            new_image_btn.click(function(){
-                i = j;
-                sessionStorage.setItem("picture", i);
-                SetPicture();
-            });
-            $("#buttons-container").append(new_image_btn);
+
+        if (images.length <= 10){
+            for (let j = 0; j < images.length; j++) {
+                let new_image_btn = $("<img>");
+                new_image_btn.attr("src", images[j].image);
+                new_image_btn.attr("alt", images[j].name);
+                new_image_btn.addClass("imgbtn");
+                new_image_btn.click(function(){
+                    i = j;
+                    SetPicture(images[i].image);
+                });
+                $("#buttons-container").append(new_image_btn);
+            }
         }
 
         $("#buttons-container").append(nextBtn);
-
     });
 
     function Next(){
         i++;
-        if(i > files.length - 1) i = 0;
+        if(i > images.length - 1) i = 0;
 
-        sessionStorage.setItem("picture", i);
-        SetPicture();
+        SetPicture(images[i].image);
     }
 
     function Back(){
         i--;
-        if(i < 0) i = files.length - 1;                
+        if(i < 0) i = images.length - 1;                
         
-        sessionStorage.setItem("picture", i);
-        SetPicture();
+        SetPicture(images[i].image);
     }
 
-    function SetPicture(){
-        $("#picture").attr("src", `/img/gallery/${files[i]}`);
-        $("#picture").attr("alt", files[i]);
-        /*$("#picture").click(function(){
-            location.href = `/img/gallery/${files[i]}`;
-        });*/
+    function SetPicture(image){
+        $("#picture").attr("src", image);
+        $("#picture").attr("alt", image);
+        // $("#picture").click(function(){
+        //     location.href = image;
+        // });
     }
 </script>
 

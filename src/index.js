@@ -1,4 +1,4 @@
-//const http = require('http');
+const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const express = require('express');
@@ -52,9 +52,9 @@ app.set('view engine', 'ejs');
 
 const hostname = '127.0.0.1';
  
-// http.createServer(app).listen(80, () => {
-//   console.log(`Server running at http://${hostname}:80/`);
-// });
+http.createServer(app).listen(80, () => {
+  console.log(`Server running at http://${hostname}:80/`);
+});
 
 https.createServer(credentials, app).listen(443, () => {
     console.log(`Server running at http://${hostname}:443/`);
