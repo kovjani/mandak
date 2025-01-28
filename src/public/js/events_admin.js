@@ -104,7 +104,7 @@ function ShowContent(events_result, i){
 
     let time = $("<div></div>");
     let d = new Date(events_result[i].date);
-    d.setDate(d.getDate() + 1); //For some reason the date is one day less in the respond, while it's correct in the database.
+    d.setDate(d.getDate() /*+ 1*/); //For some reason the date is one day less in the respond, while it's correct in the database.
     time.text(d.toISOString().split('T')[0]);
     time.addClass("time");
     place_date.append(time);
@@ -254,23 +254,23 @@ function ShowContent(events_result, i){
                 details.append(images_container);
             });
 
-            if(!images_empty){
-                //if images folder not empty, append google drive link and images
-                await $.post('/get_images_drive_folder', {event_id: events_result[i].id}, (drive_images_folder) => {
-                   if(drive_images_folder.length > 0){
-                        let drive_images_link_div = $("<div></div>");
-                        drive_images_link_div.addClass("margin_top");
+            // if(!images_empty){
+            //     //if images folder not empty, append google drive link and images
+            //     await $.post('/get_images_drive_folder', {event_id: events_result[i].id}, (drive_images_folder) => {
+            //        if(drive_images_folder.length > 0){
+            //             let drive_images_link_div = $("<div></div>");
+            //             drive_images_link_div.addClass("margin_top");
 
-                        let drive_images = $("<a class='drive_images_link' target='_blank' ><i class='fas'>&#xf302;</i> Képek megtekintése</a>");
-                        drive_images.attr("href", drive_images_folder[0].images_drive_folder);
-                        //images_container.attr("href", drive_images_folder[0].images_drive_folder);
+            //             let drive_images = $("<a class='drive_images_link' target='_blank' ><i class='fas'>&#xf302;</i> Képek megtekintése</a>");
+            //             drive_images.attr("href", drive_images_folder[0].images_drive_folder);
+            //             //images_container.attr("href", drive_images_folder[0].images_drive_folder);
 
-                        drive_images_link_div.append(drive_images);
+            //             drive_images_link_div.append(drive_images);
 
-                        details.append(drive_images_link_div);
-                   }
-               });
-            }
+            //             details.append(drive_images_link_div);
+            //        }
+            //    });
+            // }
 
             await $.post('/get_local_audio', {event_id: events_result[i].id}, function(audio_folder){
                 if(audio_folder.length > 0){

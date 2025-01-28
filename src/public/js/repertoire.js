@@ -52,6 +52,16 @@ function Search(item){
                 else{
                     title = $(`<p id='title_${i}'></p>`).text(repertoire_result[i].title);
                 }
+
+                $.post("get_best_music", {music: repertoire_result[i].id}, (best_music) => {
+                    if(best_music.length > 0){
+                        let d = new Date(best_music[0].date);
+                        d.setDate(d.getDate() /*+ 1*/); //For some reason the date is one day less in the respond, while it's correct in the database.
+                        let date = d.toISOString().split('T')[0];
+                        title.append(`<div style="color:grey; margin-bottom: 0">${best_music[0].place} (${date})<div>`);
+                    }
+                });
+
                 let list_item = $("<div></div>");
 
                 list_item.addClass("list-item");

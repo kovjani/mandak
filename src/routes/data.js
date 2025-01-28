@@ -1,21 +1,21 @@
-const { auth } = require('googleapis/build/src/apis/abusiveexperiencereport');
+//const { auth } = require('googleapis/build/src/apis/abusiveexperiencereport');
 
 module.exports = function (app, mysql, fs) {
 
     // Google drive
 
-    const { google } = require('googleapis');
+    //const { google } = require('googleapis');
 
     // Set up Google Drive API credentials
-    const credentials = JSON.parse(fs.readFileSync('credentials.json'));
-    const token = JSON.parse(fs.readFileSync('token.json'));
+    //const credentials = JSON.parse(fs.readFileSync('credentials.json'));
+    //const token = JSON.parse(fs.readFileSync('token.json'));
 
-    const { client_secret, client_id, redirect_uris } = credentials.installed;
-    const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-    oAuth2Client.setCredentials(token);
+    //const { client_secret, client_id, redirect_uris } = credentials.installed;
+    //const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+    //oAuth2Client.setCredentials(token);
 
     // Set up Google Drive API
-    const drive = google.drive({ version: 'v3', auth: oAuth2Client });
+    //const drive = google.drive({ version: 'v3', auth: oAuth2Client });
 
 
     app.post('/repertoire_data', function(request, response) {
@@ -140,7 +140,7 @@ module.exports = function (app, mysql, fs) {
             database: 'mandak'
         });
 
-        db.query(`SELECT events.id AS event_id, events.date, events.place, events.local_folder AS folder, music_to_events.audio FROM events
+        db.query(`SELECT events.id AS event_id, events.date, events.place, events.local_folder AS folder FROM events
                     LEFT OUTER JOIN music_to_events
                     ON music_to_events.event = events.id
                     WHERE music_to_events.music = ?
@@ -167,7 +167,7 @@ module.exports = function (app, mysql, fs) {
             database: 'mandak'
         });
 
-        db.query(`SELECT repertoire.id AS music_id, repertoire.author, repertoire.title, music_to_events.audio FROM repertoire
+        db.query(`SELECT repertoire.id AS music_id, repertoire.author, repertoire.title FROM repertoire
                     LEFT OUTER JOIN music_to_events
                     ON music_to_events.music = repertoire.id
                     WHERE music_to_events.event = ?
@@ -195,7 +195,7 @@ module.exports = function (app, mysql, fs) {
             database: 'mandak'
         });
 
-        db.query(`SELECT repertoire.best_music_event AS event, events.local_folder AS folder FROM repertoire
+        db.query(`SELECT repertoire.best_music_event AS event, events.local_folder AS folder, events.date AS date, events.place AS place FROM repertoire
                     INNER JOIN events ON repertoire.best_music_event = events.id
                     WHERE repertoire.id = ?`,
             [parseInt(request.body.music)],
@@ -318,7 +318,7 @@ module.exports = function (app, mysql, fs) {
 
     });
 
-    app.post('/get_images_drive_folder', (request, response) => {
+    /*app.post('/get_images_drive_folder', (request, response) => {
 
         if(request.body.event_id === undefined){
             response.end();
@@ -339,17 +339,17 @@ module.exports = function (app, mysql, fs) {
                 if(err) throw err;
 
                 // let folderId = res[0].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
-                // let images_folder = await ListDriveFolderContent(folderId, 'images');
+                // let images_folder = await ListFolderContent(folderId, 'images');
 
                 response.send(res);
                 db.end();
             }
         );
-    });
+    });*/
 
     app.post('/get_local_images', async (request, response) => {
 
-        if(request.body.event_id === undefined){
+        if(isNaN(request.body.event_id)){
             response.end();
             return;
         }
@@ -362,8 +362,21 @@ module.exports = function (app, mysql, fs) {
         });
 
         let event_id = request.body.event_id;
+        
+        if(parseInt(event_id) === -2){
+            //home gallery
+            let images = [];
+            let folder = `./public/img/mandakhaz/`;
 
-        if(event_id == -1){
+            await fs.readdirSync(folder).forEach(file => {
+                images.push({
+                    "image": `/img/mandakhaz/${file}`,
+                    "name": file
+                });
+            });
+
+            response.send(images);
+        }else if(parseInt(event_id) === -1){
             //home gallery
             let images = [];
             let folder = `./public/events/gallery/`;
@@ -461,7 +474,7 @@ module.exports = function (app, mysql, fs) {
             multipleStatements: true
         });
 
-        let all_music_in_google_drive = new Set();
+        let all_music_in_events_folder = new Set();
 
         db.query('SELECT * FROM events', async (err, events) => {
             if(err) throw err;
@@ -473,45 +486,47 @@ module.exports = function (app, mysql, fs) {
 
             for (let i = 0; i < events.length; i++) {
 
-                if(events[i].folder !== null && events[i].folder !== "" && events[i].folder !== undefined){
+                if(events[i].local_folder !== null && events[i].local_folder !== "" && events[i].local_folder !== undefined){
 
-                    let folderId = events[i].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
+                    //let folderId = events[i].folder.replace("https://drive.google.com/drive/folders/", "").split('?')[0];
+                    let folder_of_an_event = events[i].local_folder;
 
                     //audio var
 
                     //console.log(events[i].folder);
-                    let audio_folder = await ListDriveFolderContent(folderId, 'audio');
-                    let track_list;
-                    try{
-                        track_list = await ListDriveFolderContent(audio_folder[0].id, '');
-                    }catch(e){
-                        console.log(events[i].id);
-                        continue;
-                    }
+                    let track_list = await ListFolderContent(folder_of_an_event, 'audio');
+
+                    // let track_list;
+                    // try{
+                    //     track_list = await ListFolderContent(audio_folder[0].id, '');
+                    // }catch(e){
+                    //     console.log(events[i].id);
+                    //     continue;
+                    // }
                     let author, title;
 
                     //images folder url to db
 
                     // TODO --- It's only necessary when the image folder is not empty ---
 
-                    let images_folder = await ListDriveFolderContent(folderId, 'images');
-                    let images_folder_url = `https://drive.google.com/drive/folders/${images_folder[0].id}`;
+                    // let images_folder = await ListFolderContent(folder_of_an_event, 'images');
+                    // let images_folder_url = `https://drive.google.com/drive/folders/${images_folder[0].id}`;
 
-                    await DBQuery(db,
-                        `UPDATE events SET images_drive_folder = ? WHERE id = ? AND (images_drive_folder <> ? OR images_drive_folder IS NULL OR images_drive_folder = '');`,
-                        [images_folder_url, events[i].id, images_folder_url]
-                    ).catch((err) => {throw err});
+                    // await DBQuery(db,
+                    //     `UPDATE events SET images_drive_folder = ? WHERE id = ? AND (images_drive_folder <> ? OR images_drive_folder IS NULL OR images_drive_folder = '');`,
+                    //     [images_folder_url, events[i].id, images_folder_url]
+                    // ).catch((err) => {throw err});
 
                     //Save folders name
-                    let folder_name = await GetDriveFolderName(folderId);
+                    //let folder_name = await GetDriveFolderName(folderId);
 
-                    await DBQuery(db,
-                        `UPDATE events SET local_folder = ? WHERE id = ? AND (local_folder <> ? OR local_folder IS NULL OR local_folder = '');`,
-                        [folder_name, events[i].id, folder_name]
-                    ).catch((err) => {throw err});
+                    // await DBQuery(db,
+                    //     `UPDATE events SET local_folder = ? WHERE id = ? AND (local_folder <> ? OR local_folder IS NULL OR local_folder = '');`,
+                    //     [folder_of_an_event, events[i].id, folder_of_an_event]
+                    // ).catch((err) => {throw err});
 
                     //set default cover image if null
-                    let cover_image = `/events/${folder_name}/images/1.jpg`;
+                    let cover_image = `/events/${folder_of_an_event}/images/1.jpg`;
                     await DBQuery(db,
                         `UPDATE events SET cover_image = ? WHERE id = ? AND (cover_image IS NULL OR cover_image = '') AND local_folder IS NOT NULL AND local_folder != '';`,
                         [cover_image, events[i].id]
@@ -519,7 +534,7 @@ module.exports = function (app, mysql, fs) {
 
                     /*let image_list;
                     try{
-                        image_list = await ListDriveFolderContent(images_folder[0].id, '');
+                        image_list = await ListFolderContent(images_folder[0].id, '');
                     }catch(e){
                         continue;
                     }*/
@@ -542,14 +557,9 @@ module.exports = function (app, mysql, fs) {
                         }
 
                         title = title.replace(".mp3", "");
-                        /*title = title.replace(".m4a", "");
-                        title = title.replace(".mp4", "");
-                        title = title.replace(".wma", "");
-                        title = title.replace(".wav", "");
-                        title = title.replace(".ogg", "");*/
                         title = title.trim();
 
-                        all_music_in_google_drive.add(author + title);
+                        all_music_in_events_folder.add(author + title);
 
                         await db.query( `INSERT INTO repertoire (author, title)
                             SELECT ?, ?
@@ -598,14 +608,13 @@ module.exports = function (app, mysql, fs) {
                             await DBQuery(db,
                                 `DELETE FROM music_to_events
                                 WHERE music = ?
-                                AND event = ?
-                                AND audio NOT LIKE ?`,
-                                [selected_music[0].id, events[i].id, `https://drive.google.com/file/d/${track_list[j].id}/preview?usp=sharing`]
+                                AND event = ?`,
+                                [selected_music[0].id, events[i].id]
                             ).catch((err) => {throw err});
 
                             await DBQuery(db,
-                                `INSERT INTO music_to_events (music, event, audio)
-                                SELECT ?, ?, ?
+                                `INSERT INTO music_to_events (music, event)
+                                SELECT ?, ?
                                 FROM dual
                                 WHERE NOT EXISTS (
                                     SELECT 1
@@ -613,7 +622,7 @@ module.exports = function (app, mysql, fs) {
                                     WHERE music = ?
                                     AND event = ?
                                 )`,
-                                [selected_music[0].id, events[i].id, `https://drive.google.com/file/d/${track_list[j].id}/preview?usp=sharing`, selected_music[0].id, events[i].id]
+                                [selected_music[0].id, events[i].id, selected_music[0].id, events[i].id]
                             );
                         }).catch((err) => {throw err});
                     }
@@ -637,12 +646,12 @@ module.exports = function (app, mysql, fs) {
                 }
             }
 
-            //If there is a music in database and not in google drive, delete it.
+            //If there is a music in database and not in events folder, delete it.
             db.query(`SELECT id, author, title FROM repertoire`, async (err, all_music_in_database) => {
                 if(err) console.log(err);
                 for (let j = 0; j < all_music_in_database.length; j++) {
                     let database_value = all_music_in_database[j].author + all_music_in_database[j].title;
-                    if(!all_music_in_google_drive.has(database_value)){
+                    if(!all_music_in_events_folder.has(database_value)){
                         await db.query(`DELETE FROM repertoire WHERE id = ?;
                                         ALTER TABLE repertoire AUTO_INCREMENT = 1;`, [all_music_in_database[j].id]);
                     }
@@ -653,17 +662,21 @@ module.exports = function (app, mysql, fs) {
         });
     });
 
-    async function ListDriveFolderContent(folderId, fileName){
-        let drive_response = await drive.files.list({
-            q: `'${folderId}' in parents and name contains '${fileName}'`,
-            fields: 'nextPageToken, files(id, name)',
-        });
-        return drive_response.data.files;
-    }
+    async function ListFolderContent(folderName, subfolderName){
+        //folderName a folder of an event.
+        //subfolderName 'audio' or 'images'
 
-    async function GetDriveFolderName(folderId){
-        let drive_response =  await drive.files.get({ fileId: folderId })
-        return drive_response.data.name;
+        let files = [];
+        let folder = `./public/events/${folderName}/${subfolderName}/`;
+
+        await fs.readdirSync(folder).forEach(file => {
+            files.push({
+                "file": `/events/${folderName}/${subfolderName}/${file}`,   //url of the file
+                "name": file.replace(".mp3", "")
+            });
+        });
+
+        return files;
     }
 
     function DBQuery(db, query, parameters){

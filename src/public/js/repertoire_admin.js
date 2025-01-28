@@ -154,7 +154,7 @@ function ShowMusic(i, music_information, events_to_music_result, repertoire_resu
     for (let j = 0; j < events_to_music_result.length; j++) {
 
         let d = new Date(events_to_music_result[j].date);
-        d.setDate(d.getDate() + 1); //For some reason the date is one day less in the respond, while it's correct in the database.
+        d.setDate(d.getDate() /*+ 1*/); //For some reason the date is one day less in the respond, while it's correct in the database.
         let date = d.toISOString().split('T')[0];
 
         let text = `${events_to_music_result[j].place} (${date})`;

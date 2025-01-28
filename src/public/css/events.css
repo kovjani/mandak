@@ -140,6 +140,7 @@ li a:hover:not(nav a){
     background-size: cover;
     background-position: center;
     margin: 0.5em;
+    padding: 0;
 }
 .images_container .row input[type=radio]{
     flex: initial !important;
@@ -180,5 +181,5 @@ li a:hover:not(nav a){
     display: block;
     margin: auto;
     margin-top: 1em;
-    box-shadow:  0 0 0.5em #8fb514;
+    box-shadow:  0 0 0.5em #696969;
 }

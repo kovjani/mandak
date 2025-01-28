@@ -43,18 +43,20 @@ nav .active{
     background: none;
     border: none;
 }
-footer, nav{
+nav{
     box-shadow: 0 0 0.5em #333;
-    z-index: 1 !important;
+    z-index: 1;
 }
 footer{
     margin-top: 50px;
     background-color: #800020;
+    box-shadow: 0 0 0.5em #333;
     height: fit-content;
     color: white;
+    z-index: 2;
     position: relative;
 }
-#logo{
+#logo, #loginlogo{
     width: 150px;
     margin-bottom: 20px;
 }
@@ -133,7 +135,10 @@ footer{
 }
 @media only screen and (max-width: 700px) {
     #logo{
-        display: none;
+        width: 100px;
+    }
+    #social_media_links_container{
+        width: 6em !important;
     }
 }
 .header-image{
@@ -162,4 +167,34 @@ footer{
 }
 #audio_player{
     margin: 0 !important;
+}
+#cookie_warning{
+    width: 100vw;
+    padding: 1em;
+    position: fixed;
+    bottom: 0;
+    color: white;
+    background-color: #8fb514;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    display: none;
+}
+#cookie_warning button{
+    background-color: white;
+    border-radius: 1em;
+    border: none;
+    padding: 0.5em 1em;
+}
+.bigger_player{
+    height: 9em;
+    padding: 1em;
+    align-items: baseline;
+}
+.bigger_footer{
+    height: 25em;
+}
+#social_media_links_container{
+    width: 9em;
 }

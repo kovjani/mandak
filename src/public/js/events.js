@@ -98,7 +98,7 @@ function ShowContent(events_result, i){
 
     let time = $("<div></div>");
     let d = new Date(events_result[i].date);
-    d.setDate(d.getDate() + 1); //For some reason the date is one day less in the respond, while it's correct in the database.
+    d.setDate(d.getDate() /*+ 1*/); //For some reason the date is one day less in the respond, while it's correct in the database.
     time.text(d.toISOString().split('T')[0]);
     time.addClass("time");
     place_date.append(time);
@@ -109,7 +109,7 @@ function ShowContent(events_result, i){
     let details_empty = true;
 
     let description;
-    if(events_result[i].description.length > 0){
+    if(events_result[i].description !== null && events_result[i].description.length > 0){
         details_empty = false;
         description = $("<p></p>");
         description.html(events_result[i].description.replace('\n', '<br>'));
@@ -123,13 +123,15 @@ function ShowContent(events_result, i){
             exist = true;
             
             let images_empty = true;
-            let images_container = $("<a target='_blank'></a>");
+            //let images_container = $("<a target='_blank'></a>");
 
             let audio_player = $("<audio controls></audio>");
             audio_player.addClass("audio_player");
-            //let images_container = $("<div></div>");
+            let images_container = $("<div></div>");
 
             await $.post('/get_local_images', {event_id: events_result[i].id}, function(images_folder){
+
+                console.log(images_folder)
 
                 if(images_folder.length > 0){
 
@@ -160,28 +162,29 @@ function ShowContent(events_result, i){
                     }
                     
                     images_container.append(row);
+                    details.append(images_container);
                 }
             });
 
 
-            if(!images_empty){
-                //if images folder is not empty, append google drive link and images
-                await $.post('/get_images_drive_folder', {event_id: events_result[i].id}, (drive_images_folder) => {
-                   if(drive_images_folder.length > 0){
-                        let drive_images_link_div = $("<div></div>");
-                        drive_images_link_div.addClass("margin_top");
+            // if(!images_empty){
+            //     //if images folder is not empty, append google drive link and images
+            //     await $.post('/get_images_drive_folder', {event_id: events_result[i].id}, (drive_images_folder) => {
+            //        if(drive_images_folder.length > 0){
+            //             let drive_images_link_div = $("<div></div>");
+            //             drive_images_link_div.addClass("margin_top");
 
-                        let drive_images = $("<a class='drive_images_link' target='_blank' ><i class='fas'>&#xf302;</i> Képek megtekintése</a>");
-                        //drive_images.attr("href", `/galeria?event=${events_result[i].id}&image=${images_folder[j].image}`);
-                        //images_container.attr("href", drive_images_folder[0].images_drive_folder);
+            //             let drive_images = $("<a class='drive_images_link' target='_blank' ><i class='fas'>&#xf302;</i> Képek megtekintése</a>");
+            //             //drive_images.attr("href", `/galeria?event=${events_result[i].id}&image=${images_folder[j].image}`);
+            //             //images_container.attr("href", drive_images_folder[0].images_drive_folder);
 
-                        drive_images_link_div.append(drive_images);
+            //             drive_images_link_div.append(drive_images);
 
-                        details.append(drive_images_link_div);
-                        details.append(images_container);
-                   }
-               });
-            }
+            //             details.append(drive_images_link_div);
+            //             details.append(images_container);
+            //        }
+            //    });
+            // }
 
             // await $.post('/music_to_events', {event: events_result[i].id}, function(music_to_events_result){
             //     if(music_to_events_result.length > 0){

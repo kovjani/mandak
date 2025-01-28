@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+    ShowCookieContent();
+
     //change active nav-item
     $('.nav-item').on('click', function(e){
         $('.active').removeClass('active');
@@ -8,6 +10,8 @@ $(document).ready(function(){
             $(".navbar-toggler").click();
         }
     });
+
+
 
     // let change_nav_item_while_scrolling = true;
     // // Initialize Tooltip
@@ -61,3 +65,9 @@ $(document).ready(function(){
     //     }
     // });
 });
+
+function ShowCookieContent(){
+    if(localStorage.getItem("cookies_accepted")){
+        $('#video').append(`<iframe width="1280" height="720" src="https://www.youtube.com/embed/1TntYnv5ApA" title="&#39;Október a reformáció hónapja&#39; nyitó istentisztelet - Mandák Kórus" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`);
+    }
+}
