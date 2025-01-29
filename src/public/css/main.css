@@ -153,7 +153,7 @@ footer{
     background-size: cover;
     cursor: pointer;
 }
-.audio_player_container{
+/*.audio_player_container{
     width: 100vw;
     height: 5em;
     bottom: 0;
@@ -162,9 +162,10 @@ footer{
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     box-shadow: 0 0 0.5em #000;
     z-index: 1;
-}
+}*/
 #audio_player{
     margin: 0 !important;
 }
@@ -188,8 +189,8 @@ footer{
     padding: 0.5em 1em;
 }
 .bigger_player{
-    height: 9em;
-    padding: 1em;
+    height: 12em !important;
+    padding-bottom: 6em !important;
     align-items: baseline;
 }
 .bigger_footer{

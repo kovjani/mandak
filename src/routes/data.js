@@ -39,7 +39,9 @@ module.exports = function (app, mysql, fs) {
             let splitted_search_item = request.body.search_item.split(':');
             author = splitted_search_item[0].trim();
             title = splitted_search_item[1].trim();
-            query = `SELECT * FROM repertoire
+            query = `SELECT DISTINCT repertoire.*, events.date, events.place, events.local_folder
+            FROM repertoire
+            LEFT OUTER JOIN events ON repertoire.best_music_event = events.id
             WHERE author LIKE ?
             AND title LIKE ?
             ORDER BY surname, author, title`;
@@ -47,7 +49,9 @@ module.exports = function (app, mysql, fs) {
         else{
             author = request.body.search_item;
             title = request.body.search_item;
-            query = `SELECT * FROM repertoire
+            query = `SELECT repertoire.*, events.date, events.place, events.local_folder
+            FROM repertoire
+            LEFT OUTER JOIN events ON repertoire.best_music_event = events.id
             WHERE author LIKE ?
             OR title LIKE ?
             ORDER BY surname, author, title`;

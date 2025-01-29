@@ -28,19 +28,13 @@ app.use(function(req, res, next) {
     next();
 });
 
-// Let's Encrypt certificate
-/*const privateKey = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/cert.pem', 'utf8');
-const ca = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/fullchain.pem', 'utf8');*/
-
-
+// HTTPS needs certificate
 const privateKey = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/privkey.pem', 'utf8');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/fullchain.pem', 'utf8');
 
 const credentials = {
 	key: privateKey,
 	cert: certificate
-	// ca: ca
 };
 
 //authenticate google using a web browser
@@ -54,30 +48,28 @@ require('./routes/login')(app, mysql, bcrypt);
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
-/*const hostname = '127.0.0.1';
- 
-http.createServer(app).listen(80, () => {
-  console.log(`Server running at http://${hostname}:80/`);
-});
 
-https.createServer(credentials, app).listen(443, () => {
-    console.log(`Server running at http://${hostname}:443/`);
+// Only HTTP 
+/*http.createServer(app).listen(80, () => {
+  console.log(`Server running at http://127.0.0.1:80/`);
 });*/
 
-// HTTP szerver létrehozása és átirányítás HTTPS-re
+
+// HTTP server and redirect to HTTPS
 const httpServer = http.createServer((req, res) => {
   res.writeHead(301, { 'Location': 'https://' + req.headers.host + req.url });
   res.end();
 });
 
+// HTTPS server
 const httpsServer = https.createServer(credentials, app);
 
-// HTTP szerver indítása
+// start HTTP
 httpServer.listen(80, () => {
-  console.log('HTTP szerver fut a 80-as porton és átirányít HTTPS-re');
+  console.log('HTTP server on 80 and redirect to HTTPS.');
 });
 
-// HTTPS szerver indítása
+// start HTTPS
 httpsServer.listen(443, () => {
-  console.log('HTTPS szerver fut a 443-as porton');
+  console.log('HTTPS server on 443.');
 });

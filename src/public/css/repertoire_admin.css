@@ -1,7 +1,6 @@
 .list-item{
     border-bottom: solid gray 1px;
     padding: 1em;
-    padding-bottom: 0;
 }
 .list-item *:not(li, .title, audio, label){
     margin-top: 1em;
@@ -65,7 +64,7 @@ audio{
 }
 .audio_player_container{
     width: 100vw;
-    height: fit-content;
+    height: 8em;
     padding: 1.5em;
     bottom: 0;
     position: fixed;
@@ -85,7 +84,7 @@ audio{
 }
 
 #audio_player_information_container{
-    padding-right: 1em;
+
 }
 #audio_player_information_container, #audio_player_other_controls_container{
     width: 50em;

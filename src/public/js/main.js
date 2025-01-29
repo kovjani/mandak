@@ -15,6 +15,7 @@ function SetStyle(){
     if(localStorage.getItem("nav_style") === "dark"){
         $("nav").addClass("dark_mode");
         $("footer").addClass("dark_mode");
+        $('.audio_player_container').addClass("dark_mode");
         $("#nav-logo").addClass("dark_logo");
         $("#facebook-footer-icon").addClass("dark-facebook");
         $("#youtube-footer-icon").addClass("dark-youtube");
@@ -22,6 +23,7 @@ function SetStyle(){
     else{
         $("nav").removeClass("dark_mode");
         $("footer").removeClass("dark_mode");
+        $('.audio_player_container').removeClass("dark_mode");
         $("#nav-logo").removeClass("dark_logo");
         $("#facebook-footer-icon").removeClass("dark-facebook");
         $("#youtube-footer-icon").removeClass("dark-youtube");

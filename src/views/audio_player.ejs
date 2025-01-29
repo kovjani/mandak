@@ -1,3 +1,26 @@
 <div class="audio_player_container">
-  <audio id="audio_player" controls></audio>
+  <audio id="audio_player"></audio>
+
+  <div id="audio_player_information_container">
+    <div id="audio_title"></div>
+    <div id="audio_event"></div>
+  </div>
+
+  <div id="audio_player_controls_container" >
+    <div style="display: flex;">
+      <div style="width: 2em;"><span id="currentTime">00:00</span> </div>
+      <div><input type="range" id="seekBar" value="0" max="100"></div>
+      <div style="width: 2em;"><span id="duration">00:00</span></div>
+    </div>
+    <div id="audio_control_buttons">
+      <button id="playPreviousButton" class="fas fa-backward"></button>
+      <button id="playButton" class="fas fa-play"></button>
+      <button id="pauseButton" class="fas fa-pause"></button>
+      <button id="playNextButton" class="fas fa-forward"></button>
+    </div>
+  </div>
+
+
+  <div id="audio_player_other_controls_container">
+  </div>
 </div>

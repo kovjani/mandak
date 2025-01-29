@@ -1,11 +1,13 @@
 <%- include('header') %>
 <%- include('navbar') %>
 
-<link rel="stylesheet" href="/css/repertoire.css">
+
 
 <%if(admin){%>
+  <link rel="stylesheet" href="/css/repertoire_admin.css">
   <script src="js/repertoire_admin.js"></script>
 <%}else{%>
+  <link rel="stylesheet" href="/css/repertoire.css">
   <script src="js/repertoire.js"></script>
   <%- include('audio_player') %>
 <%}%>
