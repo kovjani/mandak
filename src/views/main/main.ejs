@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="hu">
+  
+<%- include('header') %>
+
+<body>
+    <%- include('navbar') %>
+
+    <div id="wrapper">
+        <% if(admin){ %>
+            <%- include('../pages/repertoire_admin') %>
+        <% }else{ %>
+            <%- include('../pages/repertoire') %>
+        <% } %>
+
+
+
+
+
+        
+    </div>
+    
+    <% if(!admin){ %>
+        <%- include('audio_player') %>
+    <% } %>
+
+    <%- include('cookie_warning') %>
+    <%- include('footer') %>
+</body>
+</html>

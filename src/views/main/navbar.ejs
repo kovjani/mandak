@@ -9,21 +9,27 @@
 
         
 
-        <li id="home-nav-item" class="nav-item active">
-          <a class="nav-link" href="/">Kezdőlap</a>
+        <li id="home-nav-item" class="nav-item active nav-link">
+          <!-- <a class="nav-link" href="/">Kezdőlap</a> -->
+           Kezdőlap
         </li>
-        <li id="gallery-nav-item" class="nav-item">
-          <a class="nav-link" href="/galeria?event=-1&image=/events/gallery/1.jpg">Galéria</a>
+        <li id="gallery-nav-item" class="nav-item nav-link">
+          <!-- <a class="nav-link" href="/galeria?event=-1&image=/events/gallery/1.jpg">Galéria</a> -->
+           Galéria
         </li>
-        <li id="repertoire-nav-item" class="nav-item">
-            <a class="nav-link" href="/repertoar">KincsTár</a>
+        <li id="repertoire-nav-item" class="nav-item nav-link">
+            <!-- <a class="nav-link" href="/repertoar">KincsTár</a> -->
+             KincsTár
         </li>
-        <li id="places-nav-item" class="nav-item">
-            <a class="nav-link" href="/fellepesek">Fellépések</a>
+        <li id="events-nav-item" class="nav-item nav-link">
+            <!-- <a class="nav-link" href="/fellepesek">Fellépések</a> -->
+             Fellépések
         </li>
-        <li id="kantorkepzo-nav-item" class="nav-item"> 
-          <a class="nav-link" href="/kantorkepzo">A Mandák-villa</a>
+        <li id="villa-nav-item" class="nav-item nav-link"> 
+          <!-- <a class="nav-link" href="/kantorkepzo">A Mandák-villa</a> -->
+           A Mandák-villa
         </li>
+
         <%if(admin){%>
           <li id="google_drive-nav-item" class="nav-item">
             <a class="nav-link" href="/synchronize_google_drive">Beállítások</a>
@@ -38,8 +44,9 @@
 
         <%} else {%>
 
-          <li id="login-nav-item" class="nav-item"> 
-            <a class="nav-link" href="/login">Bejelentkezés</a>
+          <li id="login-nav-item" class="nav-item nav-link"> 
+            <!-- <a class="nav-link" href="/login">Bejelentkezés</a> -->
+             Bejelentkezés
           </li>
 
         <% } %>

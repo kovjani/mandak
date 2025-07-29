@@ -2,6 +2,7 @@ const fs = require('fs');
 const http = require('http');
 const https = require('https');
 const express = require('express');
+const path = require('path');
 const mysql = require('mysql');
 const bcrypt = require("bcryptjs");
 const session = require('express-session');
@@ -28,32 +29,30 @@ app.use(function(req, res, next) {
     next();
 });
 
+//authenticate google using a web browser
+//require('./routes/google')();
+
+require('./routes/routes')(app, fs);
+require('./routes/data')(app, mysql, fs);
+// require('./routes/registration')(app, mysql, bcrypt);
+require('./routes/login')(app, mysql, bcrypt);
+
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+
+app.use('/styles', express.static(path.join(__dirname, 'public', 'styles')));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// HTTPS ////////////////////////////////////////////////////
+
 // HTTPS needs certificate
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/privkey.pem', 'utf8');
+/* const privateKey = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/privkey.pem', 'utf8');
 const certificate = fs.readFileSync('/etc/letsencrypt/live/mandak.hu/fullchain.pem', 'utf8');
 
 const credentials = {
 	key: privateKey,
 	cert: certificate
 };
-
-//authenticate google using a web browser
-//require('./routes/google')();
-
-require('./routes/routes')(app, fs);
-require('./routes/data')(app, mysql, fs);
-require('./routes/registration')(app, mysql, bcrypt);
-require('./routes/login')(app, mysql, bcrypt);
-
-app.use(express.static('public'));
-app.set('view engine', 'ejs');
-
-
-// Only HTTP 
-/*http.createServer(app).listen(80, () => {
-  console.log(`Server running at http://127.0.0.1:80/`);
-});*/
-
 
 // HTTP server and redirect to HTTPS
 const httpServer = http.createServer((req, res) => {
@@ -72,4 +71,16 @@ httpServer.listen(80, () => {
 // start HTTPS
 httpsServer.listen(443, () => {
   console.log('HTTPS server on 443.');
+});*/
+
+//////////////////////////////////////////////////////////////
+
+
+
+// Only HTTP /////////////////////////////////////////////////
+
+http.createServer(app).listen(80, () => {
+  console.log(`Server running at http://127.0.0.1:80/`);
 });
+
+///////////////////////////////////////////////////////////////

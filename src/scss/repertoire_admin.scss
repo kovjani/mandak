@@ -1,0 +1,201 @@
+#repertoire_admin_page_container{
+    .list-item{
+        border-bottom: solid gray 1px;
+        padding: 1em;
+    }
+    .list-item *:not(li, .title, audio, label){
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    @media only screen and (max-width: 50em) {
+        #repertoire_admin_list_container{
+            min-width: 0 !important;
+            max-width: fit-content;
+            margin: auto;
+        }
+    }
+    #repertoire_admin_list{
+        padding: 1em;
+        min-height: 100vh;
+    }
+    #repertoire_admin_list_container{
+        min-width: 50em;
+        max-width: fit-content;
+        margin: auto;
+    }
+    #repertoire_admin_search{
+        position: relative;
+    }
+    .title{
+        font-weight: bold;
+        margin: 0;
+    }
+    .title:hover{
+        cursor: pointer;
+        /* text-decoration: underline; */
+    }
+    .music_information{
+        display: none;
+        margin: 0 !important;
+    }
+    .music_list li, .author_names_list li{
+        list-style-type: none;
+        margin-bottom: 2em;
+        margin-left: 1em;
+    }
+    ul{
+    padding-left: 1em;
+    }
+    #no_result_container{
+        padding: 1em;
+        padding-left: 0;
+    }
+    #no_result{
+        color: grey;
+        font-weight: bold;
+        margin: inherit;
+        text-align: center !important;
+        text-decoration: none;
+    }
+    audio{
+        margin: 0.5em 0 1em 1em;
+        border-radius: 3em;
+        box-shadow: 0 0 0.1em #696969;
+        cursor: pointer;
+    }
+    .audio_player_container{
+        width: 100vw;
+        height: 8em;
+        padding: 1.5em;
+        bottom: 0;
+        position: fixed;
+        background: #800020;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 0 0.5em #000;
+        z-index: 2;
+    }
+    #audio_player_controls_container{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        width: fit-content;
+    }
+
+    // #audio_player_information_container{
+
+    // }
+    // #audio_player_information_container, #audio_player_other_controls_container{
+    //     width: 50em;
+    // }
+
+    // #audio_title{
+    //     color: white;
+    //     font-weight: bold;
+    //     margin-bottom: 0.5em;
+    // }
+    // #audio_event{
+    //     color: white;
+    //     opacity: 0.7;
+    //     font-weight: bold;
+    // }
+    // #seekBar {
+    //     -webkit-appearance: none; /* Remove default styling */
+    //     appearance: none;
+    //     width: 30em;
+    //     height: fit-content;
+    //     background: none;
+    //     outline: none;
+    //     border-radius: 5px;
+    //     overflow: hidden;
+    //     margin: 0 1em 0 1em;
+    // }
+
+    // #seekBar::-webkit-slider-thumb {
+    //     -webkit-appearance: none;
+    //     appearance: none;
+    //     width: 15px;
+    //     height: 15px;
+    //     background: #8fb614;
+    //     cursor: pointer;
+    //     border-radius: 50%;
+    //     border: none;
+    // }
+
+    // #seekBar::-moz-range-thumb {
+    //     width: 15px;
+    //     height: 15px;
+    //     background: #8fb614;
+    //     cursor: pointer;
+    //     border-radius: 50%;
+    //     border: none;
+    // }
+
+    // /* Custom track styles using CSS variables */
+    // #seekBar::-webkit-slider-runnable-track {
+    //     background: linear-gradient(to right, #8fb614 var(--seek-bar-percentage, 0%), #ddd var(--seek-bar-percentage, 0%));
+    //     border-radius: 10px;
+    // }
+
+    // #seekBar::-moz-range-track {
+    //     background: linear-gradient(to right, #8fb614 var(--seek-bar-percentage, 0%), #ddd var(--seek-bar-percentage, 0%));
+    //     border-radius: 10px;
+    // }
+
+    // #currentTime, #duration{
+    //     color: white;
+    // }
+
+    // #audio_control_buttons{
+    //     margin-top: 0.5em;
+    // }
+    // #playButton, #pauseButton, #playPreviousButton, #playNextButton{
+    //     border: none;
+    //     background: none;
+    //     color: white;
+    //     font-size: large;
+    // }
+    // #playButton, #pauseButton{
+    //     margin: 0 1em 0 1em;
+    // }
+    // #playButton{
+    //     display: none;
+    // }
+
+    /*p{
+        margin: 0 !important;
+    }*/
+    input[type=radio]{
+        margin: 0 !important;
+        margin-right: 0.5em !important;
+        cursor: pointer;
+    }
+    label{
+        cursor: pointer;
+    }
+    label, li{
+        margin-bottom: 0 !important;
+    }
+    .radio_buttons_title{
+        margin: 1em 0 0.5em 0 !important;
+        font-weight: bold;
+        color: #696969;
+    }
+
+    @media only screen and (max-width: 700px) {
+        #seekBar{
+            width: 10em;
+        }
+    }
+
+    @media only screen and (max-width: 1000px) {
+        #audio_player_information_container, #audio_player_other_controls_container{
+            display: none;
+        }
+        .audio_player_container{
+            justify-content: center;
+        }
+    }
+}

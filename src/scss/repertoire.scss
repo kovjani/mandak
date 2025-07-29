@@ -1,0 +1,95 @@
+#repertoire_page_container{
+    .list-item{
+        border-bottom: solid gray 1px;
+        padding: 1em;
+        padding-bottom: 0;
+    }
+    .list-item *:not(li, .title, audio, label){
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
+    @media only screen and (max-width: 50em) {
+        #repertoire_list_container{
+            min-width: 0 !important;
+            max-width: fit-content;
+            margin: auto;
+        }
+    }
+    #repertoire_list{
+        min-height: 100vh;
+    }
+    #repertoire_list_container{
+        min-width: 50em;
+        max-width: fit-content;
+        margin: auto;
+        position: relative;
+        top: 4em;
+    }
+    #repertoire_search{
+        position: relative;
+    }
+    .title{
+        font-weight: bold;
+        margin: 0;
+    }
+    .title:hover{
+        cursor: pointer;
+        /* text-decoration: underline; */
+    }
+    .music_information{
+        display: none;
+        margin: 0 !important;
+    }
+    .music_list li, .author_names_list li{
+        list-style-type: none;
+        margin-bottom: 2em;
+        margin-left: 1em;
+    }
+    ul{
+        padding-left: 1em;
+    }
+    #no_result_container{
+        padding: 1em;
+        padding-left: 0;
+    }
+    #no_result{
+        color: grey;
+        font-weight: bold;
+        margin: inherit;
+        text-align: center !important;
+        text-decoration: none;
+    }
+    audio{
+        margin: 0.5em 0 1em 1em;
+        border-radius: 3em;
+        box-shadow: 0 0 0.1em #696969;
+        cursor: pointer;
+    }
+
+
+    /*p{
+        margin: 0 !important;
+    }*/
+    input[type=radio]{
+        margin: 0 !important;
+        margin-right: 0.5em !important;
+        cursor: pointer;
+    }
+    label{
+        cursor: pointer;
+    }
+    label, li{
+        margin-bottom: 0 !important;
+    }
+    .radio_buttons_title{
+        margin: 1em 0 0.5em 0 !important;
+        font-weight: bold;
+        color: #696969;
+    }
+
+    @media only screen and (max-width: 700px) {
+        #seekBar{
+            width: 10em;
+        }
+    }
+}

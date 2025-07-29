@@ -1,30 +1,27 @@
-//change active navbar item
 $(document).ready(function(){
-    $('.active').removeClass('active');
-    $('#places-nav-item').addClass('active');
 
-    $("#search-btn").click(function(){
-        location.href = `/fellepesek?search=${$("#search_item").val()}`;
+    $("#events_admin_search_btn").click(function(){
+        location.href = `/events?search=${$("#events_admin_search_item").val()}`;
     });
 
     const urlParams = new URLSearchParams(location.search);
     Search(urlParams.get('search'));
 
     //show searched item in search bar from url params
-    $("#search_item").val(urlParams.get('search'));
+    $("#events_admin_search_item").val(urlParams.get('search'));
 });
 
 $(document).on('keypress', function(e){
     //enter
     if(e.which == 13){
-        location.href = `/fellepesek?search=${$("#search_item").val()}`;
+        location.href = `/events?search=${$("#events_admin_search_item").val()}`;
     }
 });
 
 function Search(item){
     $.post("/events_data", {search_item: item}, function(events_result){ 
 
-        $("#list").empty();
+        $("#events_admin_list").empty();
         //if there is no events_result
         if(events_result.length == 0){
             let new_list_item = $("<div></div>");
@@ -42,7 +39,7 @@ function Search(item){
                 });
             new_list_item.append(title);
 
-            $("#list").append(new_list_item);
+            $("#events_admin_list").append(new_list_item);
         }
 
         for (let i = 0; i < events_result.length; i++) {
@@ -308,7 +305,7 @@ function ShowContent(events_result, i){
                             text = audio_folder[j].name;
                         }
     
-                        track = $(`<p id="track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
+                        track = $(`<p id="events_admin_${events_result[i].id}_track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
                         track.addClass("events_track_title");
     
                         track.click(function () {
@@ -336,7 +333,7 @@ function ShowContent(events_result, i){
         }
     });
 
-    $("#list").append(new_list_item);
+    $("#events_admin_list").append(new_list_item);
 
 }
 function PlayTrack(audio_player, audio_folder, track_index, event_index){
@@ -353,6 +350,6 @@ function PlayTrack(audio_player, audio_folder, track_index, event_index){
     audio_player.trigger("play");
 
     $(".events_track_title").css("color", "black");
-    $(`#track_${track_index}_${event_index}`).css("color", "#8fb514");
+    $(`#events_admin_${events_result[i].id}_track_${track_index}_${event_index}`).css("color", "#8fb514");
 
 }

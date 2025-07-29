@@ -1,0 +1,188 @@
+#events_admin_page_container {
+    .list-item{
+        box-shadow: 0 0 0.5em #696969;
+        margin: 2em auto;
+        border-radius: 1em;
+    }
+    .title_place_date{
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 1em;
+        padding: 1em;
+    }
+    .cover{
+        background-image: url("/img/default_cover.jpg");
+        z-index: -1;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        height: fit-content;
+        width: 100%;
+        border-radius: 1em;
+        cursor: pointer;
+        display: flex;
+        justify-content: end;
+        flex-direction: column;
+    }
+    .hide_bottom_radius{
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+    .event_title{
+        font-weight: bold;
+        font-size: larger;
+        width: 100%;
+        /* padding: 0.5em 0.85em;
+        padding-bottom: 0; */
+        color: white;
+        text-shadow: 0 0 5px #000;
+    }
+    .time{
+        font-size: larger;
+        width: fit-content;
+        color: white;
+        text-shadow: 0 0 5px #000;
+        /* padding: 0 0.4em; */
+    }
+    /* .place_date{
+        padding: 0 0.5em;
+        padding-bottom: 1em;
+    } */
+    .label, .drive_images_link{
+        font-weight: bold;
+        font-size: larger;
+    }
+    .drive_images_link{
+        color: black;
+        text-decoration: none;
+    }
+    .drive_images_link:hover{
+        text-decoration: underline;
+        cursor: pointer;
+        color: black;
+    }
+    .image_link{
+        width: 5em;
+        height: 5em;
+        float: left;
+        margin-right: 0.7em;
+    }
+    .image{
+        width: 5em;
+        /* margin-right: 1em; */
+    }
+    .description{
+        text-align: justify;
+        margin-bottom: 0 !important;
+        /* min-height: 10em; */
+    }
+    /* .image_and_description{
+        overflow: hidden;
+        margin: 1em;
+        margin-top: 0;
+    } */
+    /* @media only screen and (max-width: 1000px) {
+        .music_list{
+            min-width: 0 !important;
+            max-width: fit-content;
+        }
+        .music_list li{
+            margin: 1em 0;
+        }
+    } */
+    #events_admin_list{
+        min-height: 100vh;
+        padding: 1em;
+    }
+    #events_admin_list_container{
+        max-width: 40em;
+        margin: auto;
+    }
+    #events_admin_search{
+        position: relative;
+    }
+    .display-block{
+        display: block !important;
+    }
+    audio{
+        /* margin: auto; */
+        margin-bottom: 1em;
+        border-radius: 3em;
+        box-shadow: 0 0 0.1em #696969;
+       
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    .music_list li{
+        list-style-type: none;
+        /*width: min-content; */
+    }
+    .music_list{
+        margin-bottom: 0;
+        padding-left: 1em;
+    }
+    li a:not(nav a){
+        color: black;
+        text-decoration: none;
+    }
+    li a:hover:not(nav a){
+        text-decoration: underline;
+        cursor: pointer;
+        color: black;
+    }
+    .details{
+        display: none;
+        padding: 0 1em 1em 1em !important;
+    }
+    .image_div{
+        flex: initial !important;
+        width: 5em !important;
+        height: 5em !important;
+        background-repeat: none;
+        background-size: cover;
+        background-position: center;
+        margin: 0.5em;
+        padding: 0;
+    }
+    .images_container .row input[type=radio]{
+        flex: initial !important;
+        width: initial !important;
+        max-width: initial !important;
+    }
+    .images_container .row{
+        justify-content: center;
+        margin: 0.5em 0.5em 0 0.5em;
+    }
+    .images_container{
+        color: black;
+        padding: 0 !important;
+    }
+    .images_container:hover{
+        color: black;
+        text-decoration: none;
+        cursor: default;
+    }
+    .player_iframe{
+        margin-bottom: 1em;
+    }
+    .events_track_title:hover{
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    .margin_top{
+        margin-top: 1em !important;
+    }
+    .events_audio_player_container{
+        height: 5em;
+        background: #800020;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .audio_player{
+        display: block;
+        margin: auto;
+        margin-top: 1em;
+        box-shadow:  0 0 0.5em #696969;
+    }
+}

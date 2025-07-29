@@ -1,0 +1,13 @@
+<script src="js/login.js"></script>
+
+<div id="login_page_container" class="page_container">
+    <div class="d-flex flex-column justify-content-evenly align-items-center" style="height: 90vh;">
+        <form action="/auth/login" method="post" class="d-flex flex-column justify-content-center align-items-center">
+            <img id="login_logo" src="/img/logo.png" alt="logo">
+            <input id="login_username" type="text" name="username" placeholder="Felhasználónév" required>
+            <input id="login_password" type="password" name="password" placeholder="Jelszó" required>
+            <input type="submit" value="Bejelentkezés">
+                <!-- <a id="login_registration" href="/registration">Regisztráció</a> -->
+        </form>
+    </div>
+</div>

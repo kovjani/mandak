@@ -1,4 +1,7 @@
+let files;
+
 $(document).ready(function(){
+    files = "<%= files %>".split(',');
 
     ShowCookieContent();
 
@@ -11,6 +14,23 @@ $(document).ready(function(){
         }
     });
 
+
+    $("#home_header_image_container").css("background-image", `url("/img/gallery/${files[0]}")`);
+    
+    for (let i = 0; i < files.length; i++) {
+            
+        let header_image = $("<div></div>");
+        header_image.addClass("header-image");
+        header_image.css("background-image", `url("/img/gallery/${files[i]}")`);
+        header_image.attr("id", `${i}header-image`)
+
+        $("#home_header_image_container").append(header_image);
+    }
+
+    /*$("#home_header_image_container").click(function(){
+        location.href = `/galeria`;
+    });*/
+    setInterval(HomeNext, 5000);
 
 
     // let change_nav_item_while_scrolling = true;
@@ -68,6 +88,22 @@ $(document).ready(function(){
 
 function ShowCookieContent(){
     if(localStorage.getItem("cookies_accepted")){
-        $('#video').append(`<iframe width="1280" height="720" src="https://www.youtube.com/embed/1TntYnv5ApA" title="&#39;Október a reformáció hónapja&#39; nyitó istentisztelet - Mandák Kórus" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`);
+        //s$('#home_video').append(`<iframe width="1280" height="720" src="https://www.youtube.com/embed/1TntYnv5ApA" title="&#39;Október a reformáció hónapja&#39; nyitó istentisztelet - Mandák Kórus" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`);
     }
+}
+
+let home_pictures_i = 1;
+function HomeNext(){
+    $(`.header-image`).css({"z-index": 0});
+    $(`#${home_pictures_i}header-image`).css({"z-index": 1});
+    $(`#${home_pictures_i}header-image`).animate({
+        left: '0px'
+    }, 1000, () => {
+        if(home_pictures_i === 0)
+            $(`#${files.length - 1}header-image`).css("left", "100vw");
+        else
+            $(`#${home_pictures_i-1}header-image`).css("left", "100vw");
+        home_pictures_i++;
+        if(home_pictures_i === files.length) home_pictures_i = 0;
+    });
 }

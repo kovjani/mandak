@@ -1,10 +1,4 @@
-//change active navbar item
 $(document).ready(function(){
-    $('.active').removeClass('active');
-    $('#repertoire-nav-item').addClass('active');
-
-    
-
     // Audio player controls
 
     var audio = $('#audio_player')[0];
@@ -55,29 +49,29 @@ $(document).ready(function(){
 
 
 
-    $("#search-btn").click(function(){
-        location.href = `./repertoar?search=${$("#search_item").val()}`;
+    $("#repertoire_search_btn").click(function(){
+        let searched_item = $("#repertoire_search_item").val();
+        RepertoireSearch(searched_item);
+        // Show searched item in search bar.
+        $("#repertoire_search_item").val(searched_item);
     });
 
-    const urlParams = new URLSearchParams(location.search);
-    Search(urlParams.get('search'));
-
-    //show searched item in search bar from url params
-    $("#search_item").val(urlParams.get('search'));
 });
 
 $(document).on('keypress', function(e){
     //enter
     if(e.which == 13){
-        location.href = `./repertoar?search=${$("#search_item").val()}`;
+        $("#repertoire_search_btn").click();
     }
 });
 
-function Search(item){
-    $("#list").empty();
+function RepertoireSearch(item){
+    $("#repertoire_list").empty();
+    console.log(item)
     $.post("repertoire_data", {search_item: item}, function(repertoire_result){
+        
 
-        let list = $("#list");
+        let list = $("#repertoire_list");
 
         //Store the i variable of repertoire_result in order to play next track on ended.
         let track_index = 0;
@@ -99,10 +93,10 @@ function Search(item){
 
                 let title;
                 if(repertoire_result[i].author != ""){
-                    title = $(`<p id='title_${i}'></p>`).text(repertoire_result[i].author + ": " + repertoire_result[i].title);
+                    title = $(`<p id='repertoire_title_${i}'></p>`).text(repertoire_result[i].author + ": " + repertoire_result[i].title);
                 }
                 else{
-                    title = $(`<p id='title_${i}'></p>`).text(repertoire_result[i].title);
+                    title = $(`<p id='repertoire_title_${i}'></p>`).text(repertoire_result[i].title);
                 }
 
                 let d = new Date(repertoire_result[i].date);
@@ -125,27 +119,27 @@ function Search(item){
                         "z-index": "1"
                     });
                     track_index = i;    //Important!
-                    PlayTrack(repertoire_result, track_index);
+                    PlayAudio(repertoire_result, track_index);
                 });
             }
             $("#audio_player").on('ended', () => {
-                PlayTrack(repertoire_result, ++track_index);
+                PlayAudio(repertoire_result, ++track_index);
             });
 
             $("#playPreviousButton").click(() => {
                 if(track_index > 0)
-                    PlayTrack(repertoire_result, --track_index);
+                    PlayAudio(repertoire_result, --track_index);
             });
 
             $("#playNextButton").click(() => {
                 if(track_index < repertoire_result.length - 1)
-                    PlayTrack(repertoire_result, ++track_index);
+                    PlayAudio(repertoire_result, ++track_index);
             });
         }
     });
 }
 
-function PlayTrack(repertoire_result, track_index){
+function PlayAudio(track_list, track_index){
     // In repretoire there is a column best_music_event contains an event id where the best audio recorded.
     // The repertoire table and events table connected to each other through best_music_event using inner join.
     // We can achieve the event's folder (and audio file) where the best audio was recorded.
@@ -166,7 +160,7 @@ function PlayTrack(repertoire_result, track_index){
     $('#pauseButton').show();
 
     $(".title").css("color", "black");
-    $(`#title_${track_index}`).css("color", "#8fb514");
+    $(`#repertoire_title_${track_index}`).css("color", "#8fb514");
 
     if(repertoire_result[track_index].author != ""){
         $("#audio_title").text(repertoire_result[track_index].author + ": " + repertoire_result[track_index].title);

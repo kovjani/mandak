@@ -1,29 +1,25 @@
-//change active navbar item
 $(document).ready(function(){
-    $('.active').removeClass('active');
-    $('#repertoire-nav-item').addClass('active');
-
-    $("#search-btn").click(function(){
-        location.href = `./repertoar?search=${$("#search_item").val()}`;
+    $("#repertoire_admin_search_btn").click(function(){
+        location.href = `./repertoire?search=${$("#repertoire_admin_search_item").val()}`;
     });
 
     const urlParams = new URLSearchParams(location.search);
     Search(urlParams.get('search'));
-    $("#search_item").val(urlParams.get('search'));
+    $("#repertoire_admin_search_item").val(urlParams.get('search'));
 });
 
 $(document).on('keypress', function(e){
     //enter
     if(e.which == 13){
-        location.href = `./repertoar?search=${$("#search_item").val()}`;
+        location.href = `./repertoire?search=${$("#repertoire_admin_search_item").val()}`;
     }
 });
 
 function Search(item){
-    $("#list").empty();
+    $("#repertoire_admin_list").empty();
     $.post("repertoire_data", {search_item: item}, function(repertoire_result){
 
-        let list = $("#list");
+        let list = $("#repertoire_admin_list");
 
         if(repertoire_result.length == 0){
 

@@ -1,14 +1,7 @@
-$(document).ready(function(){
-
-    $("#events_search_btn").click(function(){
-        let searched_item = $("#events_search_item").val();
-        EventsSearch(searched_item);
-
-        // Show searched item in search bar.
-        $("#events_search_item").val(searched_item);
-    });
-    
-});
+import $ from "jquery";
+import { Music } from "../../models/Music";
+import { Event } from "../../models/Event";
+import { PlayMusicList } from "../main/audio_player"
 
 $(document).on('keypress', function(e){
     //enter
@@ -17,7 +10,7 @@ $(document).on('keypress', function(e){
     }
 });
 
-function EventsSearch(item){
+export function EventsSearch(item: string){
     $.post("/events_data", {search_item: item}, function(events_result){ 
 
         $("#events_list").empty();
@@ -47,7 +40,10 @@ function EventsSearch(item){
     });
 }
 
-function EventsShowContent(events_result, i){
+function EventsShowContent(events_result: any, event_index: number){
+    let event = events_result[event_index];
+
+
     let new_list_item = $("<div></div>");
     new_list_item.addClass("list-item");
 
@@ -60,9 +56,9 @@ function EventsShowContent(events_result, i){
 
     let title_place_date = $("<div></div>");
 
-    if(events_result[i].cover_image !== null && events_result[i].cover_image !== "" && events_result[i].cover_image !== "default"){
+    if(event.cover_image !== null && event.cover_image !== "" && event.cover_image !== "default"){
         cover.css({
-            "background-image": `url("${events_result[i].cover_image}")`,
+            "background-image": `url("${event.cover_image}")`,
             "height": "15em"
         });
         title_place_date.css({
@@ -76,7 +72,7 @@ function EventsShowContent(events_result, i){
     title_place_date.addClass("title_place_date");
     cover.append(title_place_date);
 
-    let event_title = $("<div></div>").text(events_result[i].event);
+    let event_title = $("<div></div>").text(event.event);
     event_title.addClass("event_title");
     title_place_date.append(event_title);
 
@@ -87,14 +83,14 @@ function EventsShowContent(events_result, i){
     place_date.addClass("align-items-lg-center");
     title_place_date.append(place_date);
 
-    let place = $("<div></div>").text(events_result[i].place);
+    let place = $("<div></div>").text(event.place);
     place.addClass("time");
     place.css("padding-right", "0.5em");
     place_date.append(place);
 
     let time = $("<div></div>");
-    let d = new Date(events_result[i].date);
-    d.setDate(d.getDate() /*+ 1*/); //For some reason the date is one day less in the respond, while it's correct in the database.
+    let d = new Date(event.date);
+    // d.setDate(d.getDate() /*+ 1*/); //For some reason the date is one day less in the respond, while it's correct in the database.
     time.text(d.toISOString().split('T')[0]);
     time.addClass("time");
     place_date.append(time);
@@ -105,10 +101,10 @@ function EventsShowContent(events_result, i){
     let details_empty = true;
 
     let description;
-    if(events_result[i].description !== null && events_result[i].description.length > 0){
+    if(event.description !== null && event.description.length > 0){
         details_empty = false;
         description = $("<p></p>");
-        description.html(events_result[i].description.replace('\n', '<br>'));
+        description.html(event.description.replace('\n', '<br>'));
         description.addClass("description");
         description.addClass("margin_top");
         details.append(description);
@@ -125,7 +121,7 @@ function EventsShowContent(events_result, i){
             audio_player.addClass("audio_player");
             let images_container = $("<div></div>");
 
-            await $.post('/get_local_images', {event_id: events_result[i].id}, function(images_folder){
+            await $.post('/get_local_images', {event_id: event.id}, function(images_folder){
 
                 console.log(images_folder)
 
@@ -142,7 +138,7 @@ function EventsShowContent(events_result, i){
                     row.addClass("row");
 
                     for (let j = 0; j < images_folder.length; j++) {
-                        let image_link = $(`<a href="/galeria?event=${events_result[i].id}&image=${images_folder[j].image}"></a>`);
+                        let image_link = $(`<a href="/galeria?event=${event.id}&image=${images_folder[j].image}"></a>`);
                         let image_div = $(`<div></div>`);
             
                         image_link.addClass("image_link");
@@ -197,13 +193,13 @@ function EventsShowContent(events_result, i){
             //         music_list.addClass("music_list");
             //         details.append(music_list);
     
-            //         //Store the j variable of repertoire_result in order to play next track on ended.
-            //         let track_index = 0;
+            //         //Store the j variable of repertoire_result in order to play next music on ended.
+            //         let music_index = 0;
     
             //         for (let j = 0; j < music_to_events_result.length; j++) {
                     
             //             let li = $("<li></li>");
-            //             let text, track;
+            //             let text, music;
     
             //             if(music_to_events_result[j].author.length > 0){
             //                 text = music_to_events_result[j].author + ": " + music_to_events_result[j].title;
@@ -212,26 +208,26 @@ function EventsShowContent(events_result, i){
             //                 text = music_to_events_result[j].title;
             //             }
     
-            //             track = $(`<p id="track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
-            //             track.addClass("events_track_title");
+            //             music = $(`<p id="music_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
+            //             music.addClass("events_music_title");
     
-            //             track.click(function () {
-            //                 track_index = j;    //Important!
-            //                 EventsPlayTrack(audio_player, music_to_events_result, track_index, events_result[i].local_folder, i);
+            //             music.click(function () {
+            //                 music_index = j;    //Important!
+            //                 EventsPlaymusic(audio_player, music_to_events_result, music_index, events_result[i].local_folder, i);
             //             });
     
-            //             li.append(track);
+            //             li.append(music);
             //             music_list.append(li);
             //         }
             //         audio_player.on('ended', () => {
-            //             EventsPlayTrack(audio_player, music_to_events_result, ++track_index, events_result[i].local_folder, i);
+            //             EventsPlaymusic(audio_player, music_to_events_result, ++music_index, events_result[i].local_folder, i);
             //         });
 
             //         details.append(audio_player);
             //     }
             // });
 
-            await $.post('/get_local_audio', {event_id: events_result[i].id}, function(audio_folder){
+            await $.post('/get_local_audio', {event_id: event.id}, function(audio_folder){
                 if(audio_folder.length > 0){
     
                     details_empty = false;
@@ -246,40 +242,51 @@ function EventsShowContent(events_result, i){
                     music_list.addClass("music_list");
                     details.append(music_list);
     
-                    //Store the j variable of repertoire_result in order to play next track on ended.
-                    let track_index = 0;
+                    //Store the j variable of repertoire_result in order to play next music on ended.
+                    let music_index = 0;
     
-                    for (let j = 0; j < audio_folder.length; j++) {
+                    for (let music_index = 0; music_index < audio_folder.length; music_index++) {
                     
                         let li = $("<li></li>");
-                        let text, track;
+                        let text, music_p;
 
                         let author, title;
 
-                        if(audio_folder[j].name.includes("_")){
-                            let splitted = audio_folder[j].name.split("_");
+                        if(audio_folder[music_index].name.includes("_")){
+                            let splitted = audio_folder[music_index].name.split("_");
                             author = splitted[0];
                             title = splitted[1];
 
                             text = author + ": " + title;
                         }
                         else{
-                            text = audio_folder[j].name;
+                            text = audio_folder[music_index].name;
                         }
     
-                        track = $(`<p id="events_${events_result[i].id}_track_${j}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
-                        track.addClass("events_track_title");
+                        music_p = $(`<p id="events_${event.id}_music_${music_index}_${i}" style="margin-bottom: 0.3em;">${text}</p>`);
+                        music_p.addClass("events_music_title");
     
-                        track.click(function () {
-                            track_index = j;    //Important!
-                            EventsPlayTrack(audio_player, audio_folder, track_index, i);
+                        music_p.click(function () {
+                            let music_list: Music[] = [];
+
+                            for (let i = 0; i < audio_folder.length; i++) {
+                                let item = audio_folder[i];
+                                let music_event = new Event(event.place, event.date, event.local_folder);
+                                if(item.author !== "") {
+                                    music_list.push(new Music(item.id, item.title, music_event, item.author));
+                                } else {
+                                    music_list.push(new Music(item.id, item.title, music_event, item.author));
+                                }
+                            }
+
+                            PlayMusicList(music_list);
                         });
     
-                        li.append(track);
+                        li.append(music_p);
                         music_list.append(li);
                     }
                     audio_player.on('ended', () => {
-                        EventsPlayTrack(audio_player, audio_folder, ++track_index, i);
+                        EventsPlaymusic(audio_player, audio_folder, ++music_index, i);
                     });
 
                     details.append(audio_player);
@@ -299,8 +306,8 @@ function EventsShowContent(events_result, i){
 
 }
 
-function EventsPlayTrack(audio_player, audio_folder, track_index, event_index){
-    //get the best track from the music which has been recorded during an event
+/*function EventsPlaymusic(audio_player, audio_folder, music_index, event_index){
+    //get the best music from the music which has been recorded during an event
 
     audio_player.on('play', function() {
         $('audio').not(this).each(function(index, audio) {
@@ -309,10 +316,10 @@ function EventsPlayTrack(audio_player, audio_folder, track_index, event_index){
     });
 
     audio_player.trigger("pause");
-    audio_player.attr("src", audio_folder[track_index].audio);
+    audio_player.attr("src", audio_folder[music_index].audio);
     audio_player.trigger("play");
 
-    $(".events_track_title").css("color", "black");
-    $(`#events_${events_result[i].id}_track_${track_index}_${event_index}`).css("color", "#8fb514");
+    $(".events_music_title").css("color", "black");
+    $(`#events_${events_result[i].id}_music_${music_index}_${event_index}`).css("color", "#8fb514");
 
-}
+}*/
