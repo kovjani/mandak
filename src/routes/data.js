@@ -39,7 +39,7 @@ module.exports = function (app, mysql, fs) {
             let splitted_search_item = request.body.search_item.split(':');
             author = splitted_search_item[0].trim();
             title = splitted_search_item[1].trim();
-            query = `SELECT DISTINCT repertoire.*, events.date, events.place, events.local_folder
+            query = `SELECT DISTINCT repertoire.*, events.id AS event_id, events.date, events.place, events.local_folder
             FROM repertoire
             LEFT OUTER JOIN events ON repertoire.best_music_event = events.id
             WHERE author LIKE ?
@@ -49,7 +49,7 @@ module.exports = function (app, mysql, fs) {
         else{
             author = request.body.search_item;
             title = request.body.search_item;
-            query = `SELECT repertoire.*, events.date, events.place, events.local_folder
+            query = `SELECT repertoire.*, events.id AS event_id, events.date, events.place, events.local_folder
             FROM repertoire
             LEFT OUTER JOIN events ON repertoire.best_music_event = events.id
             WHERE author LIKE ?
@@ -67,7 +67,7 @@ module.exports = function (app, mysql, fs) {
         });
     });
 
-    app.post('/events_data', function(request, response) {
+    /*app.post('/events_data', function(request, response) {
 
         if(request.body.search_item === undefined){
             response.end();
@@ -128,7 +128,7 @@ module.exports = function (app, mysql, fs) {
                 db.end();
             });
         }
-    });
+    });*/
 
     app.post('/events_to_music', function(request, response){
 
@@ -157,7 +157,7 @@ module.exports = function (app, mysql, fs) {
         });
     });
 
-    app.post('/music_to_events', function(request, response){
+    /*app.post('/music_to_events', function(request, response){
 
         if(request.body.event === undefined){
             response.end();
@@ -182,7 +182,7 @@ module.exports = function (app, mysql, fs) {
             response.send(result);
             db.end();
         });
-    });
+    });*/
 
     //get the best track from the music which has been recorded during an event
     app.post('/get_best_music', (request, response) => {

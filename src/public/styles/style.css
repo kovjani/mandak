@@ -3,6 +3,17 @@
       padding: 0 0.5em;
       padding-bottom: 1em;
   } */
+  /*.drive_images_link{
+      color: black;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: larger;
+  }
+  .drive_images_link:hover{
+      text-decoration: underline;
+      cursor: pointer;
+      color: black;
+  }*/
   /* .image_and_description{
       overflow: hidden;
       margin: 1em;
@@ -57,23 +68,22 @@
 }
 #events_page_container .time {
   font-size: larger;
-  width: fit-content;
+  width: 7em;
+  text-align: right;
   color: white;
   text-shadow: 0 0 5px #000;
   /* padding: 0 0.4em; */
 }
-#events_page_container .label, #events_page_container .drive_images_link {
+#events_page_container .place {
+  font-size: larger;
+  width: fit-content;
+  color: white;
+  text-shadow: 0 0 5px #000;
+  padding-right: 0.5em;
+}
+#events_page_container .label {
   font-weight: bold;
   font-size: larger;
-}
-#events_page_container .drive_images_link {
-  color: black;
-  text-decoration: none;
-}
-#events_page_container .drive_images_link:hover {
-  text-decoration: underline;
-  cursor: pointer;
-  color: black;
 }
 #events_page_container .image_link {
   width: 5em;
@@ -87,7 +97,7 @@
 }
 #events_page_container .description {
   text-align: justify;
-  margin-bottom: 0 !important;
+  margin: 1em;
   /* min-height: 10em; */
 }
 #events_page_container #events_list {
@@ -95,8 +105,10 @@
   padding: 1em;
 }
 #events_page_container #events_list_container {
-  max-width: 40em;
+  max-width: 42.5em;
   margin: auto;
+  position: relative;
+  top: 4em;
 }
 #events_page_container #events_search {
   position: relative;
@@ -120,6 +132,7 @@
 #events_page_container .music_list {
   margin-bottom: 0;
   padding-left: 1em;
+  padding-bottom: 0.5em;
 }
 #events_page_container li a:not(nav a) {
   color: black;
@@ -132,7 +145,7 @@
 }
 #events_page_container .details {
   display: none;
-  padding: 0 1em 1em 1em !important;
+  padding: 0.5em;
 }
 #events_page_container .image_div {
   flex: initial !important;
@@ -143,6 +156,10 @@
   background-position: center;
   margin: 0.5em;
   padding: 0;
+}
+#events_page_container .image_div:hover {
+  cursor: pointer;
+  box-shadow: 0 0 0.5em #1e1e1e;
 }
 #events_page_container .images_container .row input[type=radio] {
   flex: initial !important;
@@ -156,6 +173,7 @@
 #events_page_container .images_container {
   color: black;
   padding: 0 !important;
+  margin-bottom: 1em;
 }
 #events_page_container .images_container:hover {
   color: black;
@@ -165,25 +183,9 @@
 #events_page_container .player_iframe {
   margin-bottom: 1em;
 }
-#events_page_container .events_track_title:hover {
+#events_page_container .events_music_title:hover {
   cursor: pointer;
   text-decoration: underline;
-}
-#events_page_container .margin_top {
-  margin-top: 1em !important;
-}
-#events_page_container .events_audio_player_container {
-  height: 5em;
-  background: #800020;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-#events_page_container .audio_player {
-  display: block;
-  margin: auto;
-  margin-top: 1em;
-  box-shadow: 0 0 0.5em #696969;
 }
 
 #gallery_page_container {
@@ -278,11 +280,21 @@
   /*p{
       margin: 0 !important;
   }*/
+  /*.label:hover{
+      cursor: pointer;
+
+  }
+  label, li{
+      margin-bottom: 0 !important;
+  }*/
 }
 #repertoire_page_container .list-item {
   border-bottom: solid gray 1px;
   padding: 1em;
   padding-bottom: 0;
+}
+#repertoire_page_container .list-item:hover {
+  cursor: pointer;
 }
 #repertoire_page_container .list-item *:not(li, .title, audio, label) {
   margin-top: 1em;
@@ -302,6 +314,7 @@
   min-width: 50em;
   max-width: fit-content;
   margin: auto;
+  margin-top: 1em;
   position: relative;
   top: 4em;
 }
@@ -312,9 +325,10 @@
   font-weight: bold;
   margin: 0;
 }
-#repertoire_page_container .title:hover {
-  cursor: pointer;
-  /* text-decoration: underline; */
+#repertoire_page_container .repertoire_place {
+  color: grey;
+  margin-bottom: 0;
+  font-weight: bold;
 }
 #repertoire_page_container .music_information {
   display: none;
@@ -349,12 +363,6 @@
   margin: 0 !important;
   margin-right: 0.5em !important;
   cursor: pointer;
-}
-#repertoire_page_container label {
-  cursor: pointer;
-}
-#repertoire_page_container label, #repertoire_page_container li {
-  margin-bottom: 0 !important;
 }
 #repertoire_page_container .radio_buttons_title {
   margin: 1em 0 0.5em 0 !important;
@@ -880,7 +888,7 @@ footer #copyright {
   position: fixed;
   top: 0;
   width: 100vw;
-  height: 8.5em;
+  height: 8em;
   background-color: white;
   z-index: 1;
 }

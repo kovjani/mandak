@@ -2,6 +2,8 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "ejs": "^3.1.10",
     "express": "^4.21.2",
     "express-session": "^1.18.2",
@@ -23,7 +25,9 @@
   "scripts": {
     "scss": "sass ./scss/main.scss ./public/styles/style.css",
     "scss:watch": "sass --watch ./scss/main.scss:./public/styles/style.css",
-    "ts": "webpack",
-    "ts:watch": "webpack --watch"
+    "tsf": "webpack",
+    "tsf:watch": "webpack --watch",
+    "tsb": "tsc -p ./tsconfig-backend.json",
+    "tsb:watch": "tsc -p ./tsconfig-backend.json --watch"
   }
 }

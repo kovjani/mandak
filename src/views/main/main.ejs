@@ -7,6 +7,9 @@
     <%- include('navbar') %>
 
     <div id="wrapper">
+
+        <%- include('../pages/gallery') %>
+
         <% if(admin){ %>
             <%- include('../pages/repertoire_admin') %>
         <% }else{ %>
@@ -15,6 +18,11 @@
 
 
 
+        <% if(admin){ %>
+            <%- include('../pages/events_admin') %>
+        <% }else{ %>
+            <%- include('../pages/events') %>
+        <% } %>
 
 
         

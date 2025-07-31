@@ -38,28 +38,38 @@
     }
     .time{
         font-size: larger;
-        width: fit-content;
+        width: 7em;
+        text-align: right;
         color: white;
         text-shadow: 0 0 5px #000;
         /* padding: 0 0.4em; */
+    }
+    .place {
+        font-size: larger;
+        width: fit-content;
+        color: white;
+        text-shadow: 0 0 5px #000;
+        padding-right: 0.5em;
     }
     /* .place_date{
         padding: 0 0.5em;
         padding-bottom: 1em;
     } */
-    .label, .drive_images_link{
+    .label {
         font-weight: bold;
         font-size: larger;
     }
-    .drive_images_link{
+    /*.drive_images_link{
         color: black;
         text-decoration: none;
+        font-weight: bold;
+        font-size: larger;
     }
     .drive_images_link:hover{
         text-decoration: underline;
         cursor: pointer;
         color: black;
-    }
+    }*/
     .image_link{
         width: 5em;
         height: 5em;
@@ -72,7 +82,7 @@
     }
     .description{
         text-align: justify;
-        margin-bottom: 0 !important;
+        margin: 1em;
         /* min-height: 10em; */
     }
     /* .image_and_description{
@@ -94,8 +104,10 @@
         padding: 1em;
     }
     #events_list_container{
-        max-width: 40em;
+        max-width: 42.5em;
         margin: auto;
+        position: relative;
+        top: 4em;
     }
     #events_search{
         position: relative;
@@ -119,6 +131,7 @@
     .music_list{
         margin-bottom: 0;
         padding-left: 1em;
+        padding-bottom: 0.5em;
     }
     li a:not(nav a){
         color: black;
@@ -131,7 +144,7 @@
     }
     .details{
         display: none;
-        padding: 0 1em 1em 1em !important;
+        padding: 0.5em;
     }
     .image_div{
         flex: initial !important;
@@ -142,6 +155,10 @@
         background-position: center;
         margin: 0.5em;
         padding: 0;
+        &:hover{
+            cursor: pointer;
+            box-shadow: 0 0 0.5em #1e1e1e;
+        }
     }
     .images_container .row input[type=radio]{
         flex: initial !important;
@@ -155,6 +172,7 @@
     .images_container{
         color: black;
         padding: 0 !important;
+        margin-bottom: 1em;
     }
     .images_container:hover{
         color: black;
@@ -164,24 +182,8 @@
     .player_iframe{
         margin-bottom: 1em;
     }
-    .events_track_title:hover{
+    .events_music_title:hover{
         cursor: pointer;
         text-decoration: underline;
-    }
-    .margin_top{
-        margin-top: 1em !important;
-    }
-    .events_audio_player_container{
-        height: 5em;
-        background: #800020;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .audio_player{
-        display: block;
-        margin: auto;
-        margin-top: 1em;
-        box-shadow:  0 0 0.5em #696969;
     }
 }

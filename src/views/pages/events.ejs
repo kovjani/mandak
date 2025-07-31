@@ -1,13 +1,15 @@
-<script src="/js/events.js"></script>
-
 <div id="events_page_container" class="page_container">
-  <div id="events_list_container" class="container margin-top">
-    <div id="events_search" class="d-flex">
+
+  <div class="search_bar_container_outside">
+    <div id="events_search_container" class="d-flex search_bar_container_inside">
       <input id="events_search_item" class="form-control me-2" type="text" placeholder="Keresés">
-      <button id="events_search_btn" class="fa fa-search" onclick="Search()"></button>
+      <button id="events_search_btn" class="fa fa-search search_btn"></button>
     </div>
-    <div id="events_list">
-    </div>  
   </div>
+
+  <div id="events_list_container" class="container">
+    <div id="events_list"></div>  
+  </div>
+  
 </div>
 

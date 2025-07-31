@@ -10740,10 +10740,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.PlayMusicList = PlayMusicList;
+exports.PlayRepertoireMusicList = PlayRepertoireMusicList;
+exports.PlayEventMusicList = PlayEventMusicList;
 var jquery_1 = __importDefault(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"));
-function PlayMusicList(music_list, music_index) {
+function PlayRepertoireMusicList(music_list, music_index) {
     PlayAudio(music_list[music_index], music_index);
+    (0, jquery_1.default)(".title").css("color", "black");
+    (0, jquery_1.default)(".events_music_title").css("color", "black");
+    (0, jquery_1.default)("#repertoire_title_".concat(music_index)).css("color", "#8fb514");
     // Remove handlers.
     (0, jquery_1.default)("#audio_player").off();
     (0, jquery_1.default)("#playNextButton").off();
@@ -10752,18 +10756,64 @@ function PlayMusicList(music_list, music_index) {
         if (music_index < music_list.length - 1) {
             music_index++;
             PlayAudio(music_list[music_index], music_index);
+            (0, jquery_1.default)(".title").css("color", "black");
+            (0, jquery_1.default)(".events_music_title").css("color", "black");
+            (0, jquery_1.default)("#repertoire_title_".concat(music_index)).css("color", "#8fb514");
         }
     });
     (0, jquery_1.default)("#playNextButton").click(function () {
         if (music_index < music_list.length - 1) {
             music_index++;
             PlayAudio(music_list[music_index], music_index);
+            (0, jquery_1.default)(".title").css("color", "black");
+            (0, jquery_1.default)(".events_music_title").css("color", "black");
+            (0, jquery_1.default)("#repertoire_title_".concat(music_index)).css("color", "#8fb514");
         }
     });
     (0, jquery_1.default)("#playPreviousButton").click(function () {
         if (music_index > 0) {
             music_index--;
             PlayAudio(music_list[music_index], music_index);
+            (0, jquery_1.default)(".title").css("color", "black");
+            (0, jquery_1.default)(".events_music_title").css("color", "black");
+            (0, jquery_1.default)("#repertoire_title_".concat(music_index)).css("color", "#8fb514");
+        }
+    });
+}
+function PlayEventMusicList(music_list, music_index, event_index) {
+    PlayAudio(music_list[music_index], music_index);
+    (0, jquery_1.default)(".title").css("color", "black");
+    (0, jquery_1.default)(".events_music_title").css("color", "black");
+    (0, jquery_1.default)("#music_".concat(music_index, "_").concat(event_index)).css("color", "#8fb514");
+    // Remove handlers.
+    (0, jquery_1.default)("#audio_player").off();
+    (0, jquery_1.default)("#playNextButton").off();
+    (0, jquery_1.default)("#playPreviousButton").off();
+    (0, jquery_1.default)("#audio_player").on('ended', function () {
+        if (music_index < music_list.length - 1) {
+            music_index++;
+            PlayAudio(music_list[music_index], music_index);
+            (0, jquery_1.default)(".title").css("color", "black");
+            (0, jquery_1.default)(".events_music_title").css("color", "black");
+            (0, jquery_1.default)("#music_".concat(music_index, "_").concat(event_index)).css("color", "#8fb514");
+        }
+    });
+    (0, jquery_1.default)("#playNextButton").click(function () {
+        if (music_index < music_list.length - 1) {
+            music_index++;
+            PlayAudio(music_list[music_index], music_index);
+            (0, jquery_1.default)(".title").css("color", "black");
+            (0, jquery_1.default)(".events_music_title").css("color", "black");
+            (0, jquery_1.default)("#music_".concat(music_index, "_").concat(event_index)).css("color", "#8fb514");
+        }
+    });
+    (0, jquery_1.default)("#playPreviousButton").click(function () {
+        if (music_index > 0) {
+            music_index--;
+            PlayAudio(music_list[music_index], music_index);
+            (0, jquery_1.default)(".title").css("color", "black");
+            (0, jquery_1.default)(".events_music_title").css("color", "black");
+            (0, jquery_1.default)("#music_".concat(music_index, "_").concat(event_index)).css("color", "#8fb514");
         }
     });
 }
@@ -10778,8 +10828,6 @@ function PlayAudio(music, music_index) {
         (0, jquery_1.default)("#audio_title").text(music.getMusicTitle());
     }
     (0, jquery_1.default)("#audio_event").text("".concat(music.getMusicEventPlace(), " (").concat(music.getMusicEventDateStr(), ")"));
-    (0, jquery_1.default)(".title").css("color", "black");
-    (0, jquery_1.default)("#repertoire_title_".concat(music_index)).css("color", "#8fb514");
 }
 
 
@@ -10799,7 +10847,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 var jquery_1 = __importDefault(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"));
 var repertoire_1 = __webpack_require__(/*! ../pages/repertoire */ "./typescript/frontend/pages/repertoire.ts");
-// import { EventsSearch } from "../pages/events";
+var events_1 = __webpack_require__(/*! ../pages/events */ "./typescript/frontend/pages/events.ts");
 (0, jquery_1.default)(function () {
     // Audio player controls
     var audio = (0, jquery_1.default)('#audio_player')[0];
@@ -10854,18 +10902,16 @@ var repertoire_1 = __webpack_require__(/*! ../pages/repertoire */ "./typescript/
         (0, repertoire_1.RepertoireSearch)(searched_item);
         // Show searched item in search bar.
         (0, jquery_1.default)("#repertoire_search_item").val(searched_item);
-        console.log(val);
     });
-    /* $("#events_search_btn").click(function(){
-         let val = $("#events_search_item").val();
-         let searched_item: string = val !== undefined ? val.toString() : "";
-         EventsSearch(searched_item);
- 
-         // Show searched item in search bar.
-         $("#events_search_item").val(searched_item);
-     });*/
+    (0, jquery_1.default)("#events_search_btn").click(function () {
+        var val = (0, jquery_1.default)("#events_search_item").val();
+        var searched_item = val !== undefined ? val.toString() : "";
+        (0, events_1.EventsSearch)(searched_item);
+        // Show searched item in search bar.
+        (0, jquery_1.default)("#events_search_item").val(searched_item);
+    });
     (0, jquery_1.default)("#repertoire_search_btn").click();
-    //$("#events_search_btn").click();
+    (0, jquery_1.default)("#events_search_btn").click();
 });
 (0, jquery_1.default)(document).on('keypress', function (e) {
     //enter
@@ -10899,6 +10945,305 @@ var search_bar_hidden = false;
 
 /***/ }),
 
+/***/ "./typescript/frontend/pages/events.ts":
+/*!*********************************************!*\
+  !*** ./typescript/frontend/pages/events.ts ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+    return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EventsSearch = EventsSearch;
+var jquery_1 = __importDefault(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"));
+var Music_1 = __webpack_require__(/*! ../../models/Music */ "./typescript/models/Music.ts");
+var Event_1 = __webpack_require__(/*! ../../models/Event */ "./typescript/models/Event.ts");
+var audio_player_1 = __webpack_require__(/*! ../main/audio_player */ "./typescript/frontend/main/audio_player.ts");
+var gallery_1 = __webpack_require__(/*! ./gallery */ "./typescript/frontend/pages/gallery.ts");
+(0, jquery_1.default)(document).on('keypress', function (e) {
+    //enter
+    if (e.which == 13) {
+        (0, jquery_1.default)("#events_search_btn").click();
+    }
+});
+function EventsSearch(item) {
+    jquery_1.default.post("/events_data", { search_item: item }, function (events_result) {
+        (0, jquery_1.default)("#events_list").empty();
+        //if there is no events_result
+        if (events_result.length == 0) {
+            var new_list_item = (0, jquery_1.default)("<div></div>");
+            new_list_item.css('padding', '1em');
+            new_list_item.css('padding-left', '0');
+            var title = (0, jquery_1.default)("<p></p>").text("A keresésnek nincsen eredménye.");
+            title.addClass("mr-auto");
+            title.addClass("d-block");
+            title.css({
+                color: 'grey',
+                'font-weight': 'bold',
+                margin: 'inherit',
+                'text-align': 'center !important'
+            });
+            new_list_item.append(title);
+            (0, jquery_1.default)("#events_list").append(new_list_item);
+        }
+        for (var i = 0; i < events_result.length; i++) {
+            var event_1 = new Event_1.Event(events_result.place, events_result.date, events_result.local_folder);
+            EventsShowContent(events_result, i);
+        }
+    });
+}
+function EventsShowContent(events_result, event_index) {
+    var event = events_result[event_index];
+    var new_list_item = (0, jquery_1.default)("<div></div>");
+    new_list_item.addClass("list-item");
+    var details = (0, jquery_1.default)("<div></div>");
+    details.addClass("details");
+    var cover = (0, jquery_1.default)("<div></div>");
+    cover.addClass("cover");
+    new_list_item.append(cover);
+    var title_place_date = (0, jquery_1.default)("<div></div>");
+    if (event.cover_image !== null && event.cover_image !== "" && event.cover_image !== "default") {
+        cover.css({
+            "background-image": "url(\"".concat(event.cover_image, "\")"),
+            "height": "15em"
+        });
+        title_place_date.css({
+            "padding-top": "2em",
+            "background": "linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8))",
+            "border-top-left-radius": "0",
+            "border-top-right-radius": "0"
+        });
+    }
+    title_place_date.addClass("title_place_date");
+    cover.append(title_place_date);
+    var event_title = (0, jquery_1.default)("<div></div>").text(event.event);
+    event_title.addClass("event_title");
+    title_place_date.append(event_title);
+    cover.hover(function () {
+        // mouse enters, add style
+        event_title.css('text-decoration', 'underline');
+    }, function () {
+        // mouse leaves, remove style
+        event_title.css('text-decoration', 'none');
+    });
+    var place_date = (0, jquery_1.default)("<div></div>");
+    place_date.addClass("place_date");
+    place_date.addClass("d-lg-flex");
+    place_date.addClass("justify-content-lg-between");
+    place_date.addClass("align-items-lg-center");
+    title_place_date.append(place_date);
+    var place = (0, jquery_1.default)("<div></div>").text(event.place);
+    place.addClass("place");
+    place_date.append(place);
+    var time = (0, jquery_1.default)("<div></div>");
+    var d = new Date(event.date);
+    time.text(d.toISOString().split('T')[0]);
+    time.addClass("time");
+    place_date.append(time);
+    new_list_item.append(details);
+    var exist = false;
+    var details_empty = true;
+    var description;
+    if (event.description !== null && event.description.length > 0) {
+        details_empty = false;
+        description = (0, jquery_1.default)("<p></p>");
+        description.html(event.description.replace('\n', '<br>'));
+        description.addClass("description");
+        details.append(description);
+    }
+    cover.click(function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var images_empty_1, images_container_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!!exist) return [3 /*break*/, 3];
+                        exist = true;
+                        images_empty_1 = true;
+                        images_container_1 = (0, jquery_1.default)("<div></div>");
+                        return [4 /*yield*/, jquery_1.default.post('/get_local_images', { event_id: event.id }, function (images_folder) {
+                                if (images_folder.length > 0) {
+                                    details_empty = false;
+                                    images_empty_1 = false;
+                                    var ilabel = (0, jquery_1.default)("<h6>K\u00E9pek</h6>");
+                                    ilabel.addClass("label");
+                                    images_container_1.addClass("images_container");
+                                    images_container_1.addClass("container");
+                                    var row = (0, jquery_1.default)("<div></div>");
+                                    row.addClass("row");
+                                    row.append(ilabel);
+                                    var images_list_1 = [];
+                                    for (var j = 0; j < images_folder.length; j++) {
+                                        images_list_1.push(images_folder[j].image);
+                                    }
+                                    var _loop_1 = function (j) {
+                                        //let image_link = $(`<a href="/galeria?event=${event.id}&image=${images_folder[j].image}"></a>`);
+                                        var image_div = (0, jquery_1.default)("<div></div>");
+                                        image_div.addClass("col");
+                                        image_div.addClass("image_div");
+                                        image_div.css("background-image", "url(\"".concat(images_folder[j].image, "\")"));
+                                        image_div.click(function () {
+                                            (0, jquery_1.default)("#gallery-nav-item").click();
+                                            (0, gallery_1.GallerySetPicture)(images_folder[j].image, images_list_1, j);
+                                        });
+                                        row.append(image_div);
+                                    };
+                                    for (var j = 0; j < images_folder.length; j++) {
+                                        _loop_1(j);
+                                    }
+                                    images_container_1.append(row);
+                                    details.append(images_container_1);
+                                }
+                            })];
+                    case 1:
+                        _a.sent();
+                        return [4 /*yield*/, jquery_1.default.post('/music_to_event', { event_id: event.id }, function (music_to_events_result) {
+                                if (music_to_events_result.length > 0) {
+                                    details_empty = false;
+                                    var label = (0, jquery_1.default)("<h6>M\u0171vek</h6>");
+                                    label.addClass("label");
+                                    var music_list_html = (0, jquery_1.default)("<ul></ul>");
+                                    music_list_html.addClass("music_list");
+                                    music_list_html.append(label);
+                                    details.append(music_list_html);
+                                    var music_list_1 = [];
+                                    for (var i = 0; i < music_to_events_result.length; i++) {
+                                        var res = music_to_events_result[i];
+                                        var ievent = new Event_1.Event(event.place, event.date, event.local_folder);
+                                        if (res.author !== "") {
+                                            music_list_1.push(new Music_1.Music(res.id, res.title, ievent, res.author));
+                                        }
+                                        else {
+                                            music_list_1.push(new Music_1.Music(res.id, res.title, ievent, res.author));
+                                        }
+                                    }
+                                    var _loop_2 = function (music_index) {
+                                        var li = (0, jquery_1.default)("<li></li>");
+                                        var text = void 0, music = void 0;
+                                        if (music_to_events_result[music_index].author.length > 0) {
+                                            text = music_to_events_result[music_index].author + ": " + music_to_events_result[music_index].title;
+                                        }
+                                        else {
+                                            text = music_to_events_result[music_index].title;
+                                        }
+                                        music = (0, jquery_1.default)("<p id=\"music_".concat(music_index, "_").concat(event_index, "\" style=\"margin-bottom: 0.3em;\">").concat(text, "</p>"));
+                                        music.addClass("events_music_title");
+                                        music.click(function () {
+                                            (0, jquery_1.default)(".audio_player_container").css("display", "flex");
+                                            /*$("footer").css({
+                                                "height": "30em",
+                                                "z-index": "1"
+                                            });*/
+                                            (0, audio_player_1.PlayEventMusicList)(music_list_1, music_index, event_index);
+                                        });
+                                        li.append(music);
+                                        music_list_html.append(li);
+                                    };
+                                    for (var music_index = 0; music_index < music_to_events_result.length; music_index++) {
+                                        _loop_2(music_index);
+                                    }
+                                }
+                            })];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        //if details tag is not empty, show that and set some css to it. 
+                        if (!details_empty) {
+                            details.slideToggle("fast");
+                            cover.toggleClass("hide_bottom_radius");
+                            title_place_date.toggleClass("hide_bottom_radius");
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
+    });
+    (0, jquery_1.default)("#events_list").append(new_list_item);
+}
+
+
+/***/ }),
+
+/***/ "./typescript/frontend/pages/gallery.ts":
+/*!**********************************************!*\
+  !*** ./typescript/frontend/pages/gallery.ts ***!
+  \**********************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.GallerySetPicture = GallerySetPicture;
+var jquery_1 = __importDefault(__webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js"));
+function GallerySetPicture(image_name, image_list, image_index) {
+    (0, jquery_1.default)(document).scrollTop(0);
+    (0, jquery_1.default)("#gallery_picture").attr("src", image_name);
+    (0, jquery_1.default)("#gallery_picture").attr("alt", image_name);
+    // Remove handles set before.
+    (0, jquery_1.default)("#gallery_back_btn").off();
+    (0, jquery_1.default)("#gallery_next_btn").off();
+    (0, jquery_1.default)("#gallery_back_btn").click(function () {
+        if (image_index > 0) {
+            image_index--;
+            (0, jquery_1.default)("#gallery_picture").attr("src", image_list[image_index]);
+            (0, jquery_1.default)("#gallery_picture").attr("alt", image_list[image_index]);
+        }
+    });
+    (0, jquery_1.default)("#gallery_next_btn").click(function () {
+        if (image_index < image_list.length - 1) {
+            image_index++;
+            (0, jquery_1.default)("#gallery_picture").attr("src", image_list[image_index]);
+            (0, jquery_1.default)("#gallery_picture").attr("alt", image_list[image_index]);
+        }
+    });
+}
+
+
+/***/ }),
+
 /***/ "./typescript/frontend/pages/repertoire.ts":
 /*!*************************************************!*\
   !*** ./typescript/frontend/pages/repertoire.ts ***!
@@ -10921,17 +11266,15 @@ function RepertoireSearch(item) {
         (0, jquery_1.default)(document).scrollTop(0);
         (0, jquery_1.default)("#repertoire_list").empty();
         var list = (0, jquery_1.default)("#repertoire_list");
-        //Store the i variable of repertoire_result in order to play next music on ended.
-        var music_index = 0;
         var music_list = [];
         for (var i = 0; i < repertoire_result.length; i++) {
-            var item_1 = repertoire_result[i];
-            var event_1 = new Event_1.Event(item_1.place, item_1.date, item_1.local_folder);
-            if (item_1.author !== "") {
-                music_list.push(new Music_1.Music(item_1.id, item_1.title, event_1, item_1.author));
+            var res = repertoire_result[i];
+            var event_1 = new Event_1.Event(res.place, res.date, res.local_folder);
+            if (res.author !== "") {
+                music_list.push(new Music_1.Music(res.id, res.title, event_1, res.author));
             }
             else {
-                music_list.push(new Music_1.Music(item_1.id, item_1.title, event_1, item_1.author));
+                music_list.push(new Music_1.Music(res.id, res.title, event_1, res.author));
             }
         }
         if (repertoire_result.length == 0) {
@@ -10944,89 +11287,45 @@ function RepertoireSearch(item) {
             list.append(list_item);
         }
         else {
-            var _loop_1 = function (music_index_1) {
-                var title = void 0;
-                if (repertoire_result[music_index_1].author != "") {
-                    title = (0, jquery_1.default)("<p id='repertoire_title_".concat(music_index_1, "'></p>")).text(repertoire_result[music_index_1].author + ": " + repertoire_result[music_index_1].title);
+            var _loop_1 = function (music_index) {
+                var title;
+                if (repertoire_result[music_index].author != "") {
+                    title = (0, jquery_1.default)("<p id='repertoire_title_".concat(music_index, "'></p>")).text(repertoire_result[music_index].author + ": " + repertoire_result[music_index].title);
                 }
                 else {
-                    title = (0, jquery_1.default)("<p id='repertoire_title_".concat(music_index_1, "'></p>")).text(repertoire_result[music_index_1].title);
+                    title = (0, jquery_1.default)("<p id='repertoire_title_".concat(music_index, "'></p>")).text(repertoire_result[music_index].title);
                 }
-                var d = new Date(repertoire_result[music_index_1].date);
+                var d = new Date(repertoire_result[music_index].date);
                 d.setDate(d.getDate() /*+ 1*/); //For some reason the date is one day less in the respond, while it's correct in the database.
                 var date = d.toISOString().split('T')[0];
-                title.append("<div style=\"color:grey; margin-bottom: 0\">".concat(repertoire_result[music_index_1].place, " (").concat(date, ")<div>"));
                 var list_item = (0, jquery_1.default)("<div></div>");
                 list_item.addClass("list-item");
                 list_item.append(title);
+                list_item.append("<div class=\"repertoire_place\">".concat(repertoire_result[music_index].place, " (").concat(date, ")<div>"));
+                list_item.hover(function () {
+                    // mouse enters, add style
+                    title.css('text-decoration', 'underline');
+                }, function () {
+                    // mouse leaves, remove style
+                    title.css('text-decoration', 'none');
+                });
                 list.append(list_item);
                 title.addClass("title");
-                title.click(function () {
+                list_item.click(function () {
                     (0, jquery_1.default)(".audio_player_container").css("display", "flex");
-                    (0, jquery_1.default)("footer").css({
+                    /*$("footer").css({
                         "height": "30em",
                         "z-index": "1"
-                    });
-                    (0, audio_player_1.PlayMusicList)(music_list, music_index_1);
+                    });*/
+                    (0, audio_player_1.PlayRepertoireMusicList)(music_list, music_index);
                 });
             };
-            for (var music_index_1 = 0; music_index_1 < repertoire_result.length; music_index_1++) {
-                _loop_1(music_index_1);
+            for (var music_index = 0; music_index < repertoire_result.length; music_index++) {
+                _loop_1(music_index);
             }
-            /*$("#audio_player").on('ended', () => {
-                PlayAudio(repertoire_result, ++music_index);
-            });
-
-            $("#playPreviousButton").click(() => {
-                if(music_index > 0)
-                    PlayAudio(repertoire_result, --music_index);
-            });
-
-            $("#playNextButton").click(() => {
-                if(music_index < repertoire_result.length - 1)
-                    PlayAudio(repertoire_result, ++music_index);
-            });*/
         }
     });
 }
-/*function PlayAudio(music_list, music_index){
-    // In repretoire there is a column best_music_event contains an event id where the best audio recorded.
-    // The repertoire table and events table connected to each other through best_music_event using inner join.
-    // We can achieve the folder of the event (and audio file) where the best audio was recorded.
-
-    let music_name;
-    if(repertoire_result[music_index].author.length > 0){
-        music_name = repertoire_result[music_index].author + "_" + repertoire_result[music_index].title + ".mp3";
-    }
-    else{
-        music_name = repertoire_result[music_index].title + ".mp3";
-    }
-
-    $("#audio_player").trigger("pause");
-    $("#audio_player").attr("src", `/events/${repertoire_result[music_index].local_folder}/audio/${music_name}`);
-    $("#audio_player").trigger("play");
-
-    $('#playButton').hide();
-    $('#pauseButton').show();
-
-    $(".title").css("color", "black");
-    $(`#repertoire_title_${music_index}`).css("color", "#8fb514");
-
-    if(music_index. !== ""){
-        $("#audio_title").text(repertoire_result[music_index].author + ": " + repertoire_result[music_index].title);
-        let d = new Date(repertoire_result[music_index].date);
-        //d.setDate(d.getDate() + 1); //For some reason the date is one day less in the respond, while it's correct in the database.
-        let date = d.toISOString().split('T')[0];
-        $("#audio_event").text(`${repertoire_result[music_index].place} (${date})`);
-    }
-    else{
-        $("#audio_title").text(repertoire_result[music_index].title);
-        let d = new Date(repertoire_result[music_index].date);
-        //d.setDate(d.getDate() + 1); //For some reason the date is one day less in the respond, while it's correct in the database.
-        let date = d.toISOString().split('T')[0];
-        $("#audio_event").text(`${repertoire_result[music_index].place} (${date})`);
-    }
-}*/ 
 
 
 /***/ }),

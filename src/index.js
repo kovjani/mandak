@@ -34,6 +34,7 @@ app.use(function(req, res, next) {
 
 require('./routes/routes')(app, fs);
 require('./routes/data')(app, mysql, fs);
+require('./routes/events')(app, mysql);
 // require('./routes/registration')(app, mysql, bcrypt);
 require('./routes/login')(app, mysql, bcrypt);
 

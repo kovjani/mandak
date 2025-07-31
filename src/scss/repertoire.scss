@@ -3,6 +3,9 @@
         border-bottom: solid gray 1px;
         padding: 1em;
         padding-bottom: 0;
+        &:hover{
+            cursor: pointer;
+        }
     }
     .list-item *:not(li, .title, audio, label){
         margin-top: 1em;
@@ -22,6 +25,7 @@
         min-width: 50em;
         max-width: fit-content;
         margin: auto;
+        margin-top: 1em;
         position: relative;
         top: 4em;
     }
@@ -32,9 +36,10 @@
         font-weight: bold;
         margin: 0;
     }
-    .title:hover{
-        cursor: pointer;
-        /* text-decoration: underline; */
+    .repertoire_place{
+        color:grey; 
+        margin-bottom: 0;
+        font-weight: bold;
     }
     .music_information{
         display: none;
@@ -75,12 +80,13 @@
         margin-right: 0.5em !important;
         cursor: pointer;
     }
-    label{
+    /*.label:hover{
         cursor: pointer;
+
     }
     label, li{
         margin-bottom: 0 !important;
-    }
+    }*/
     .radio_buttons_title{
         margin: 1em 0 0.5em 0 !important;
         font-weight: bold;

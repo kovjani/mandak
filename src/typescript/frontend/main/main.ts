@@ -1,6 +1,6 @@
 import $ from "jquery";
 import { RepertoireSearch } from "../pages/repertoire";
-// import { EventsSearch } from "../pages/events";
+import { EventsSearch } from "../pages/events";
 
 $(() => {
     // Audio player controls
@@ -62,21 +62,19 @@ $(() => {
 
         // Show searched item in search bar.
         $("#repertoire_search_item").val(searched_item);
-
-        console.log(val);
     });
 
-   /* $("#events_search_btn").click(function(){
+    $("#events_search_btn").click(function(){
         let val = $("#events_search_item").val();
         let searched_item: string = val !== undefined ? val.toString() : "";
         EventsSearch(searched_item);
 
         // Show searched item in search bar.
         $("#events_search_item").val(searched_item);
-    });*/
+    });
 
     $("#repertoire_search_btn").click();
-    //$("#events_search_btn").click();
+    $("#events_search_btn").click();
 });
 
 $(document).on('keypress', (e) => {
