@@ -2,4 +2,4 @@
 
 [www.mandak.hu](https://mandak.hu/)
 
-A git forráskódban az 'src/public' mappából hiányzik az 'events' mappa, ami a képeket és a hangfelvételeket tartalmazza.
+The events folder which contains pictures and audio is missing from 'src/public' in repository. This folder is on the server.
