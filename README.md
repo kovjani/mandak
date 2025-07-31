@@ -1,4 +1,4 @@
-# A mandák kórus weboldala
+# This is the repository of Mandak choir's website.
 
 [www.mandak.hu](https://mandak.hu/)
 
